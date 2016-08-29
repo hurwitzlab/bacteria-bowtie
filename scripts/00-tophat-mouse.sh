@@ -1,23 +1,24 @@
 #
-# This script is intended to get back the original fastq's from your screened fasta's
+# to map the mouse
 #
 
 source ./config.sh
-export STEP_SIZE=20
 
 PROG=`basename $0 ".sh"`
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR" "$FILTERED_FQ"
+init_dir "$STDOUT_DIR" "$MOUSE_OUT"
 
-cd "$FASTA_DIR"
+cd "$FASTQ_DIR"
 
-export FILES_LIST="$FASTA_DIR/files-list"
+export LEFT_FASTQ="$PRJ_DIR/left_fastq"
+export RIGHT_FASTQ="$PRJ_DIR/right_fastq"
+export UNPAIRED="$PRJ_DIR/unpaired_fastq"
 
-find . -type f -name \*.fa | sed "s/^\.\///" > $FILES_LIST
+find . -type f -regextype 'sed' -iregex '.+1.fastq.+' > $LEFT_FASTQ
+find . -type f -regextype 'sed' -iregex '.+2.fastq.+' > $RIGHT_FASTQ
+find . -type f -regextype 'sed' -iregex '.+nomatch.+' > $UNPAIRED
 
-NUM_FILES=$(lc $FILES_LIST)
+echo "Mapping FASTQs to $MOUSEBT2"
 
-echo Found \"$NUM_FILES\" files in \"$FASTA_DIR\"
-
-JOB=$(qsub -J 1-$NUM_FILES:$STEP_SIZE -V -N fetch-fq -j oe -o "$STDOUT_DIR" $WORKER_DIR/fetch-fq.sh)
+JOB=$(qsub -V -N tophatm -j oe -o "$STDOUT_DIR" $WORKER_DIR/tophat.sh)
