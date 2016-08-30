@@ -26,4 +26,4 @@ for i in $SAMPLE_NAMES; do
 
 done
 
-JOB=$(qsub -V -N tophatm -j oe -o "$STDOUT_DIR" $WORKER_DIR/tophat.sh)
+JOB=$(qsub -V -N tophatm -j oe -o "$STDOUT_DIR" $WORKER_DIR/run-tophat.sh)
