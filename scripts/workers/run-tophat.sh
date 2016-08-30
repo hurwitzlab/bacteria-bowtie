@@ -3,28 +3,38 @@
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -W group_list=bhurwitz
 #PBS -q standard
-#PBS -l jobtype=smp_only
 
 ### Set the number of cpus that will be used.
-#PBS -l select=1:ncpus=12:mem=30Gb
-#PBS -l cput=32:0:0
-#PBS -l walltime=2:0:0
+#PBS -l select=1:ncpus=6:mem=30Gb
+#PBS -l cput=24:0:0
+#PBS -l walltime=4:0:0
 
-source /usr/share/Modules/init/bash
+cd $PBS_O_WORKDIR
 
-module load bowtie2
-module load tophat
-module load samtools
-module load cufflinks
+set -u
+
+echo "Started at $(date) on host $(hostname)"
+
+COMMON="$WORKER_DIR/common.sh"
+
+if [ -e $COMMON ]; then
+  . "$COMMON"
+else
+  echo Missing common \"$COMMON\"
+  exit 1
+fi
 
 SAMPLE=$i
 OUT_DIR="$MOUSE_OUT/$SAMPLE"
 init_dir "$OUT_DIR"
+
+cd "$FASTQ_DIR"
+
 time tophat --max-multihits 1 --no-discordant --no-mixed --read-mismatches 0 \
-    -o $OUT_DIR -p 12 \
+    -o $OUT_DIR -p 6 \
     --mate-inner-dist 25 --library-type fr-unstranded genome \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \
-    $MOUSEBT2
+    $MOUSEBT2 \
     $LEFT_FASTQ,$UNPAIRED $RIGHT_FASTQ
 
 rm $OUT_DIR/unmapped.bam
