@@ -25,8 +25,9 @@ export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/tophat-bacteria"
 export SAMPLE_NAMES="RNA_1 RNA_2 RNA_3 RNA_4"
 
 #
-# Where mouse bowtie indices are
+# Where mouse bowtie indices are and wholegenomefasta
 #
+export MOUSEFASTA="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/WholeGenomeFasta/genome.fa"
 export MOUSEBT2="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/Bowtie2Index/genome"
 export MOUSEGFF="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Annotation/Genes/genes.gtf"
 

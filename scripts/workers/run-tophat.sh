@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #PBS -m bea
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -W group_list=bhurwitz
@@ -24,17 +24,19 @@ else
   exit 1
 fi
 
-SAMPLE=$i
+echo "Doing sample $SAMPLE"
 OUT_DIR="$MOUSE_OUT/$SAMPLE"
 init_dir "$OUT_DIR"
 
 cd "$FASTQ_DIR"
 
+export BOWTIE2_INDEXES=$(dirname $MOUSEBT2)
+echo $BOWTIE2_INDEXES
+
 time tophat --max-multihits 1 --no-discordant --no-mixed --read-mismatches 0 \
     -o $OUT_DIR -p 6 \
     --mate-inner-dist 25 --library-type fr-unstranded genome \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \
-    $MOUSEBT2 \
     $LEFT_FASTQ,$UNPAIRED $RIGHT_FASTQ
 
 rm $OUT_DIR/unmapped.bam

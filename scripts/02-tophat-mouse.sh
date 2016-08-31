@@ -13,7 +13,8 @@ init_dir "$STDOUT_DIR" "$MOUSE_OUT"
 cd "$FASTQ_DIR"
 
 for i in $SAMPLE_NAMES; do
-
+    
+    export SAMPLE=$i
     export LEFT_FASTQ="$TEMP_DIR/$i-left-fastq"
     export RIGHT_FASTQ="$TEMP_DIR/$i-right-fastq"
     export UNPAIRED="$TEMP_DIR/$i-unpaired-fastq"

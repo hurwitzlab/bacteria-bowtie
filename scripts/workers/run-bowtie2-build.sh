@@ -18,6 +18,10 @@ echo "Started at $(date) on host $(hostname)"
 
 echo "Bowtie2 indexing..."
 
-bowtie2-build $CONTIGS $BOWTIE2_DB
+cd $(dirname $MOUSEBT2)
+
+bowtie2-build --large-index $MOUSEFASTA $MOUSEBT2
+
+ln $MOUSEFASTA "$MOUSEBT2".fa
 
 echo "Done $(date)"
