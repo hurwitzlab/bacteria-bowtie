@@ -3,6 +3,7 @@
 # Intended to make a transcriptome index first
 #
 
+unset module
 source ./config.sh
 
 CWD=$(pwd)
