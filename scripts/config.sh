@@ -27,9 +27,11 @@ export SAMPLE_NAMES="RNA_1 RNA_2 RNA_3 RNA_4"
 #
 # Where mouse bowtie indices are and wholegenomefasta
 #
-export MOUSEFASTA="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/WholeGenomeFasta/genome.fa"
-export MOUSEBT2="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/Bowtie2Index/genome"
-export MOUSEGFF="/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/Mus_musculus/NCBI/build37.2/Annotation/Genes/genes.gtf"
+export REF_DIR="/rsgrps/bhurwitz/hurwitzlab/data/reference"
+export MOUSEFASTA="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/WholeGenomeFasta/genome.fa"
+export MOUSEBT2="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/Bowtie2Index/genome"
+export MOUSEGFF="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Annotation/Genes/genes.gtf"
+export MOUSETRANS="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/transcriptome"
 
 #
 # Where bacteria genomes are
@@ -46,7 +48,6 @@ export WORKER_DIR="$SCRIPT_DIR/workers"
 #
 export DATA_DIR="$PRJ_DIR/data"
 export MOUSE_OUT="$DATA_DIR/topmouse"
-export MOUSETRANS="$DATA_DIR/mouse_transcriptome"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
 export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"
