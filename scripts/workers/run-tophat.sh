@@ -5,9 +5,9 @@
 #PBS -q standard
 
 ### Set the number of cpus that will be used.
-#PBS -l select=1:ncpus=6:mem=30Gb
-#PBS -l cput=24:0:0
-#PBS -l walltime=4:0:0
+#PBS -l select=1:ncpus=12:mem=36Gb
+#PBS -l cput=96:0:0
+#PBS -l walltime=24:0:0
 
 cd $PBS_O_WORKDIR
 
@@ -30,15 +30,15 @@ init_dir "$OUT_DIR"
 
 cd "$FASTQ_DIR"
 
-export BOWTIE2_INDEXES=$(dirname $MOUSEBT2)
-echo "Using indexes here: $BOWTIE2_INDEXES\n \
-    With basename $(basename $MOUSEBT2)"
+export BOWTIE2_INDEXES="$(dirname $MOUSEBT2)/"
+echo "Using indexes here: $BOWTIE2_INDEXES"
+echo "With basename $(basename $MOUSEBT2)"
 
 time tophat --max-multihits 1 --no-discordant --no-mixed --read-mismatches 0 \
-    -o $OUT_DIR -p 6 \
-    --mate-inner-dist 25 --library-type fr-unstranded genome \
+    -o $OUT_DIR -p 12 \
+    --mate-inner-dist 25 --library-type fr-unstranded \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \
     $(basename $MOUSEBT2) \
-    $LEFT_FASTQ,$UNPAIRED $RIGHT_FASTQ
+    $(cat $LEFT_FASTQ),$(cat $UNPAIRED) $(cat $RIGHT_FASTQ)
 
 rm $OUT_DIR/unmapped.bam
