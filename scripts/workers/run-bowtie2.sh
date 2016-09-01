@@ -28,7 +28,6 @@ fi
 bowtie2 -p 12 \
     --very-sensitive-local \
     --no-unal \
-    --no-sq \
     -k 1 \
     -x $BT2 \
     -1 $(cat $LEFT_FASTQ) \
