@@ -9,6 +9,9 @@
 #PBS -l cput=96:0:0
 #PBS -l walltime=24:0:0
 
+module load gcc
+echo $LD_LIBRARY_PATH
+
 cd $PBS_O_WORKDIR
 
 set -u
@@ -34,7 +37,7 @@ export BOWTIE2_INDEXES="$(dirname $MOUSEBT2)/"
 echo "Using indexes here: $BOWTIE2_INDEXES"
 echo "With basename $(basename $MOUSEBT2)"
 
-time tophat --max-multihits 1 --no-discordant --no-mixed --read-mismatches 0 \
+time tophat --max-multihits 1 --read-mismatches 0 \
     -o $OUT_DIR -p 12 \
     --mate-inner-dist 25 --library-type fr-unstranded \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \

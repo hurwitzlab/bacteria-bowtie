@@ -37,6 +37,9 @@ export MOUSETRANS="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/transcripto
 # Where bacteria genomes are
 #
 export BACT_DIR="$PRJ_DIR/genomes"
+#bfrag
+export BFRAGBT2="$BACT_DIR/bfrag/genome"
+export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
 
 #
 # Where we can find the worker scripts
@@ -48,6 +51,7 @@ export WORKER_DIR="$SCRIPT_DIR/workers"
 #
 export DATA_DIR="$PRJ_DIR/data"
 export MOUSE_OUT="$DATA_DIR/topmouse"
+export BFRAG_OUT="$DATA_DIR/bfrag_out"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
 export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"

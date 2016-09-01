@@ -31,13 +31,16 @@ init_dir "$OUT_DIR"
 
 cd "$FASTQ_DIR"
 
-export BOWTIE2_INDEXES=$(dirname $MOUSEBT2)
+export BOWTIE2_INDEXES="$(dirname $MOUSEBT2)/"
+echo "Using indexes here: $BOWTIE2_INDEXES"
+echo "With basename $(basename $MOUSEBT2)"
 
-time tophat --max-multihits 1 --no-discordant --no-mixed --read-mismatches 0 \
+time tophat --max-multihits 1 --read-mismatches 0 \
     -o $OUT_DIR -p 12 \
-    --mate-inner-dist 25 --library-type fr-unstranded genome \
+    --mate-inner-dist 25 --library-type fr-unstranded \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \
-    $LEFT_FASTQ,$UNPAIRED $RIGHT_FASTQ
+    $(basename $MOUSEBT2) \
+    $(cat $LEFT_FASTQ),$(cat $UNPAIRED) $(cat $RIGHT_FASTQ)
 
 rm $OUT_DIR/unmapped.bam
 
