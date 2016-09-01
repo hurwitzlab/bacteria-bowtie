@@ -30,11 +30,11 @@ bowtie2 -p 12 \
     --no-unal \
     --no-sq \
     -k 1 \
-    -x $BFRAGBT2 \
+    -x $BT2 \
     -1 $(cat $LEFT_FASTQ) \
     -2 $(cat $RIGHT_FASTQ) \
     -U $(cat $UNPAIRED) \
-    -S $BFRAG_OUT
+    -S $OUT/$SAMPLE
 
 echo "Done at $(date)"
 

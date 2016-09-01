@@ -1,5 +1,5 @@
 #
-# to map the bfrag
+# to map the mouse
 #
 unset module
 source ./config.sh
@@ -8,7 +8,7 @@ CWD=$(pwd)
 PROG=`basename $0 ".sh"`
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR" "$BFRAG_OUT"
+init_dir "$STDOUT_DIR" "$MOUSE_OUT"
 
 cd "$FASTQ_DIR"
 
@@ -18,8 +18,8 @@ for i in $SAMPLE_NAMES; do
     export LEFT_FASTQ="$TEMP_DIR/$i-left-fastq"
     export RIGHT_FASTQ="$TEMP_DIR/$i-right-fastq"
     export UNPAIRED="$TEMP_DIR/$i-unpaired-fastq"
-    export BT2="$BFRAGBT2"
-    export OUT="$BFRAG_OUT"
+    export BT2="$MOUSEBT2"
+    export OUT="$MOUSE_OUT"
     #have to do the weird translate and sed stuff
     #because tophat likes everything comma delimited
 
@@ -34,7 +34,8 @@ for i in $SAMPLE_NAMES; do
 #        | tr '\n' ',' | sed "s/,$//g" > $UNPAIRED
 
     echo "Mapping $i FASTQs to $BT2"
-    JOB=$(qsub -V -N bowtie2 -j oe -o "$STDOUT_DIR" $WORKER_DIR/run-bowtie2.sh)
+
+    JOB=$(qsub -V -N bowtie3 -j oe -o "$STDOUT_DIR" $WORKER_DIR/run-bowtie2.sh)
 
     if [ $? -eq 0 ]; then
         echo Submitted job \"$JOB\" for you. Weeeeeeeeeeeee!

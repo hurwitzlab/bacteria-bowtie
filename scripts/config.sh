@@ -40,6 +40,7 @@ export BACT_DIR="$PRJ_DIR/genomes"
 #bfrag
 export BFRAGBT2="$BACT_DIR/bfrag/genome"
 export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
+export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
 
 #
 # Where we can find the worker scripts
