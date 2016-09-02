@@ -24,10 +24,5 @@ STDOUT_DIR="$CWD/out/$PROG"
 
 init_dir "$STDOUT_DIR/$(basename $1)"
 
-for i in $SAMPLE_NAMES; do
-    export SAMDIR=$1
-    export SAMPLE=$i
-    echo "Using $1"
-    echo "Doing sample $i"
-    qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffdiff.sh
-done
+export SAMDIR=$1
+qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffdiff.sh
