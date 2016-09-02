@@ -16,7 +16,7 @@ else
     exit 12385
 fi
 
-if [[ $# != 1 ]]; then
+if [[ $# = 0 ]]; then
     echo "Usage: ./00-bowtie2-build.sh \$FASTA \$BT2"
     echo "\$FASTA is your source FASTA to build BT2 indices from"
     echo "And \$BT2 is the (dir)/(basename) of your BT2 indices"
@@ -44,7 +44,7 @@ else
   exit 1
 fi
 
-JOB=$(qsub -V -N bowtie2-build -j oe -o "$STDOUT_DIR" $WORKER_DIR/run-bowtie2-build.sh)
+JOB=$(qsub -V -N bowtie2-build -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/run-bowtie2-build.sh)
 
 if [ $? -eq 0 ]; then
     echo Submitted job \"$JOB\" for you. Weeeeeeeeeeeee!
