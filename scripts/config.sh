@@ -48,7 +48,10 @@ export BACT_DIR="$PRJ_DIR/genomes"
 export BFRAGBT2="$BACT_DIR/bfrag/genome"
 export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
 export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
-
+#bfrag + other usual suspects
+export ALLBT2="$BACT_DIR/all/genome"
+export ALLGFF="$BACT_DIR/all/all.gff"
+export ALLFASTA="$BACT_DIR/all/all.fna"
 #
 # Where we can find the worker scripts
 #
@@ -58,8 +61,9 @@ export WORKER_DIR="$SCRIPT_DIR/workers"
 # Where to put all our generated data
 #
 export DATA_DIR="$PRJ_DIR/data"
-export MOUSE_OUT="$DATA_DIR/topmouse"
+export MOUSE_OUT="$DATA_DIR/mouse_out"
 export BFRAG_OUT="$DATA_DIR/bfrag_out"
+export ALLBACT_OUT="$DATA_DIR/allbact_out"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
 export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"
