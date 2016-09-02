@@ -28,11 +28,18 @@ export SAMPLE_NAMES="RNA_1 RNA_2 RNA_3 RNA_4"
 # Where mouse bowtie indices are and wholegenomefasta
 #
 export REF_DIR="/rsgrps/bhurwitz/hurwitzlab/data/reference"
-export MOUSEFASTA="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/WholeGenomeFasta/genome.fa"
-export MOUSEBT2="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/Bowtie2Index/genome"
-export MOUSEGFF="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Annotation/Genes/genes.gtf"
-export MOUSETRANS="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/transcriptome"
 
+#using ensembl for tophat because i just want to try it again
+export MOUSEFASTA="$REF_DIR/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/ensembl/bowtie2/genome.fa"
+export MOUSEBT2="$REF_DIR/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/ensembl/bowtie2/genome"
+export MOUSEGFF="$REF_DIR/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/ensembl/bowtie2/genome.gtf"
+export MOUSETRANS="$REF_DIR/rsgrps/bhurwitz/hurwitzlab/data/reference/tophat_mouse/ensembl/bowtie2/transcriptome"
+
+#export MOUSEFASTA="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/WholeGenomeFasta/genome.fa"
+#export MOUSEBT2="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Sequence/Bowtie2Index/genome"
+#export MOUSEGFF="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/Annotation/Genes/genes.gtf"
+#export MOUSETRANS="$REF_DIR/tophat_mouse/Mus_musculus/NCBI/build37.2/transcriptome"
+#
 #
 # Where bacteria genomes are
 #
