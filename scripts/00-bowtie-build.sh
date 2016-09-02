@@ -16,12 +16,24 @@ else
     exit 12385
 fi
 
+if [[ $# != 1 ]]; then
+    echo "Usage: ./00-bowtie2-build.sh \$FASTA \$BT2"
+    echo "\$FASTA is your source FASTA to build BT2 indices from"
+    echo "And \$BT2 is the (dir)/(basename) of your BT2 indices"
+    echo "ALSO: did you source config.sh?"
+    exit 1
+fi
+
+
+
 PROG=`basename $0 ".sh"`
 #Just going to put stdout and stderr together into stdout
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR"
+init_dir "$STDOUT_DIR/$(basename $1)"
 
+export FASTA=$1
+export BT2=$2
 
 COMMON="$WORKER_DIR/common.sh"
 

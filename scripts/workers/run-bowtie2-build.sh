@@ -16,12 +16,12 @@ echo "Started at $(date) on host $(hostname)"
 
 echo "Bowtie2 indexing..."
 
-cd $(dirname $MOUSEBT2)
+cd $(dirname $BT2)
 
-bowtie2-build $MOUSEFASTA $MOUSEBT2
+bowtie2-build $FASTA $BT2
 
-if [[ ! -e "$MOUSEBT2".fa ]]; then
-    ln $MOUSEFASTA "$MOUSEBT2".fa
+if [[ ! -e "$BT2".fa ]]; then
+    ln $FASTA "$BT2".fa
 fi
 
 echo "Done $(date)"
