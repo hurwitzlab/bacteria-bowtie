@@ -10,7 +10,7 @@ source ./config.sh
 export CWD="$PWD"
 export STEP_SIZE=1
 
-if [[ $# != 1 ]]; then
+if [[ $# = 0 ]]; then
     echo "Need to know what sam output directory to work on"
     echo "e.g. ./05-convert-to-bam.sh \$MOUSE_OUT"
     echo "ALSO: did you source config.sh?"
