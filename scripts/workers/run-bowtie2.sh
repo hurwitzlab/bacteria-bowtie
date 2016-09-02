@@ -2,9 +2,7 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q standard
-#PBS -l jobtype=cluster_only
-#PBS -l select=1:ncpus=12:mem=23gb:pcmem=2gb
-#PBS -l pvmem=46gb
+#PBS -l select=1:ncpus=12:mem=25gb
 #PBS -l walltime=3:00:00
 #PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
@@ -33,7 +31,7 @@ bowtie2 -p 12 \
     -1 $(cat $LEFT_FASTQ) \
     -2 $(cat $RIGHT_FASTQ) \
     -U $(cat $UNPAIRED) \
-    -S $OUT/$SAMPLE
+    -S $OUT/$SAMPLE.sam
 
 echo "Done at $(date)"
 

@@ -2,11 +2,8 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q standard
-#PBS -l jobtype=cluster_only
-#PBS -l select=1:ncpus=12:mem=23gb:pcmem=2gb
-#PBS -l pvmem=46gb
+#PBS -l select=1:ncpus=6:mem=6gb
 #PBS -l walltime=3:00:00
-#PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
 
@@ -33,13 +30,15 @@ if [ $SAMDIR == $BFRAG_OUT ]; then
     GENOME=$BFRAGFASTA
 fi
 
+cd $SAMDIR
+
 echo Converting $SAMPLE using reference $GENOME
 
-samtools view -@ 12 -bT $GENOME $SAMPLE > $SAMPLE.temp
+samtools view -@ 6 -bT $GENOME $SAMPLE.sam > $SAMPLE.temp
 
 echo Sorting $SAMPLE
 
-samtools sort -@ 12 $SAMPLE.temp > $SAMDIR/$SAMPLE.bam
+samtools sort -@ 6 $SAMPLE.temp > $SAMDIR/$SAMPLE.bam
 
 echo Removing $SAMPLE.temp
 
