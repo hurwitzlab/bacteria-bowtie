@@ -24,10 +24,10 @@ fi
 
 if [ $SAMDIR == $MOUSE_OUT ]; then
     GENOME=$MOUSEFASTA
-fi
-
-if [ $SAMDIR == $BFRAG_OUT ]; then
+elif [ $SAMDIR == $BFRAG_OUT ]; then
     GENOME=$BFRAGFASTA
+elif [ $SAMDIR == $ALLBACT_OUT ]; then
+    GENOME=$ALLFASTA
 fi
 
 cd $SAMDIR

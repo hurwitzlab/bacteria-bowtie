@@ -61,7 +61,8 @@ export WORKER_DIR="$SCRIPT_DIR/workers"
 # Where to put all our generated data
 #
 export DATA_DIR="$PRJ_DIR/data"
-export MOUSE_OUT="$DATA_DIR/mouse_out"
+#export MOUSE_OUT="$DATA_DIR/mouse_out"
+export MOUSE_OUT="$DATA_DIR/topmouse"
 export BFRAG_OUT="$DATA_DIR/bfrag_out"
 export ALLBACT_OUT="$DATA_DIR/allbact_out"
 

@@ -23,28 +23,28 @@ PROG=`basename $0 ".sh"`
 STDOUT_DIR="$CWD/out/$PROG"
 
 init_dir "$STDOUT_DIR/$(basename $1)"
-
-if [ $1 == $MOUSE_OUT ]; then
-    echo "You have chosen Mouse"
-    echo "Directory is $MOUSE_OUT"
-    echo "Files there are $(ls $MOUSE_OUT)"
-#    exit 1
-fi
-
-if [ $1 == $BFRAG_OUT ]; then
-    echo "You have chosen Bfrag"
-    echo "Directory is $BFRAG_OUT"
-    echo "Files there are $(ls $BFRAG_OUT)"
-fi
-
-export FILE_LIST="$TEMP_DIR/sam_files"
-
-find $1 -iname \*RNA\*sam > $FILE_LIST
-
-export NUM_FILES=$(lc $FILE_LIST)
-
-echo \"Found $NUM_FILES to make bams from\"
-echo \"Splitting them up in batches of "$STEP_SIZE"\"
+#
+#if [ $1 == $MOUSE_OUT ]; then
+#    echo "You have chosen Mouse"
+#    echo "Directory is $MOUSE_OUT"
+#    echo "Files there are $(ls $MOUSE_OUT)"
+##    exit 1
+#fi
+#
+#if [ $1 == $BFRAG_OUT ]; then
+#    echo "You have chosen Bfrag"
+#    echo "Directory is $BFRAG_OUT"
+#    echo "Files there are $(ls $BFRAG_OUT)"
+#fi
+#
+#export FILE_LIST="$TEMP_DIR/sam_files"
+#
+#find $1 -iname \*RNA\*sam > $FILE_LIST
+#
+#export NUM_FILES=$(lc $FILE_LIST)
+#
+#echo \"Found $NUM_FILES to make bams from\"
+#echo \"Splitting them up in batches of "$STEP_SIZE"\"
 echo Submitting job...
  
 for i in $SAMPLE_NAMES; do
