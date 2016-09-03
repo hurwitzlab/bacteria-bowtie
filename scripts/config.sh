@@ -50,7 +50,7 @@ export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
 export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
 #bfrag + other usual suspects
 export ALLBT2="$BACT_DIR/all/genome"
-export ALLGFF="$BACT_DIR/all/all.gff"
+export ALLGFF="$BACT_DIR/all/all_fixed.gff"
 export ALLFASTA="$BACT_DIR/all/all.fna"
 #
 # Where we can find the worker scripts
