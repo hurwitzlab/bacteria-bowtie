@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 echo "Set this to your working directory of cummerbund data"
 
-export RWORK_DIR="/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects"
+export IFS=$'\n'
 
-echo "Working on $RWORK_DIR"
+export RWORK_DIR='/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects'
