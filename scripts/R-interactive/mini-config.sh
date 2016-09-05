@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Set this to your working directory of cummerbund data"
+echo "Setting this to your working directory of cummerbund data"
 
 export IFS=$'\n'
 
