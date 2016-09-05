@@ -1,3 +1,7 @@
+setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+
+system(command = "./process.sh")
+
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
 #
 # library(cummeRbund)
@@ -18,7 +22,7 @@ simple_gene_counts$sum<-rowSums(simple_gene_counts[,c(3,4,5,6)])
 filtered<-simple_gene_counts[simple_gene_counts$sum!=0,]
 filtered<-filtered[order(filtered$sum,decreasing = T),]
 
-annotation<-read.table("id_to_product.tab",header = F,sep = '\t')
+annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "")
 colnames(annotation)<-c("tracking_id","product_name")
 
 filtered_annotated<-merge(filtered,annotation,by="tracking_id")
