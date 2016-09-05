@@ -18,7 +18,7 @@ echo "Bowtie2 indexing..."
 
 cd $(dirname $BT2)
 
-bowtie2-build $FASTA $BT2
+bowtie2-build --large-index $FASTA $BT2
 
 if [[ ! -e "$BT2".fa ]]; then
     ln $FASTA "$BT2".fa
