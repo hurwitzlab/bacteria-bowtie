@@ -32,3 +32,4 @@ filtered_annotated<-merge(filtered,annotation,by="tracking_id")
 filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all = F)
 filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
 
+write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
