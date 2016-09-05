@@ -1,8 +1,8 @@
 setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
-system(command = "./process.sh")
+system(command = "./process-bfrag.sh")
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_bfrag")
 #
 # library(cummeRbund)
 #
@@ -32,4 +32,4 @@ filtered_annotated<-merge(filtered,annotation,by="tracking_id")
 filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all = F)
 filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
 
-write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
+write.csv(filtered_annotated,"diff_exp_for_bfrag.csv")
