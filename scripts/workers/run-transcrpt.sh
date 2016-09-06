@@ -11,7 +11,7 @@
 
 echo "Time started $(date)"
 
-time tophat  -p 6 \
+time tophat -p 6 \
     -G $MOUSEGFF \
     --transcriptome-index=$MOUSETRANS/known \
     $MOUSEBT2

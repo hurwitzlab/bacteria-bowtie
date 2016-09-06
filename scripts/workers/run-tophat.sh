@@ -10,7 +10,6 @@
 #PBS -l walltime=24:0:0
 
 module load gcc
-echo $LD_LIBRARY_PATH
 
 cd $PBS_O_WORKDIR
 
@@ -33,15 +32,15 @@ init_dir "$OUT_DIR"
 
 cd "$FASTQ_DIR"
 
-export BOWTIE2_INDEXES="$(dirname $MOUSEBT2)/"
-echo "Using indexes here: $BOWTIE2_INDEXES"
-echo "With basename $(basename $MOUSEBT2)"
-
+#export BOWTIE2_INDEXES="$(dirname $MOUSEBT2)/"
+#echo "Using indexes here: $BOWTIE2_INDEXES"
+#echo "With basename $(basename $MOUSEBT2)"
+#
 time tophat --max-multihits 1 --read-mismatches 0 \
     -o $OUT_DIR -p 12 \
     --mate-inner-dist 25 --library-type fr-unstranded \
     --transcriptome-index=$MOUSETRANS/known --transcriptome-only \
-    $(basename $MOUSEBT2) \
+    $MOUSEBT2 \
     $(cat $LEFT_FASTQ),$(cat $UNPAIRED) $(cat $RIGHT_FASTQ)
 
 rm $OUT_DIR/unmapped.bam
