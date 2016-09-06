@@ -34,4 +34,8 @@ cd $SAMDIR
 
 echo Running cuffdiff with gff $GFF in $SAMDIR
 
-time cuffdiff -p 6 -L S1,S2,S3,S4 $GFF RNA_1.bam RNA_2.bam RNA_3.bam RNA_4.bam
+export ALLBAMS="$SAMDIR/allbams"
+
+find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
+
+time cuffdiff -p 6 -L S1,S2,S3,S4 $GFF $(cat $ALLBAMS) 

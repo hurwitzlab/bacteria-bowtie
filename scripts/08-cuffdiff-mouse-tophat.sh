@@ -10,19 +10,13 @@ source ./config.sh
 export CWD="$PWD"
 export STEP_SIZE=1
 
-if [[ $# = 0 ]]; then
-    echo "Need to know what sam output directory to work on"
-    echo "e.g. ./07-cuffdiff.sh \$MOUSE_OUT"
-    echo "ALSO: did you source config.sh?"
-    exit 1
-fi
-
 echo Setting up log files...
 PROG=`basename $0 ".sh"`
 #Just going to put stdout and stderr together into stdout
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR/$(basename $1)"
+init_dir "$STDOUT_DIR"
 
-export SAMDIR=$1
-qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffdiff.sh
+export SAMDIR=$MOUSE_OUT
+
+qsub -V -j oe -o "$STDOUT_DIR" $WORKER_DIR/cuffdiff.sh
