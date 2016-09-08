@@ -1,4 +1,4 @@
-#setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
 #system(command = "./process.sh")
 
@@ -31,5 +31,9 @@ colnames(gene_annotation)<-c("tracking_id","gene")
 filtered_annotated<-merge(filtered,annotation,by="tracking_id")
 filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all = F)
 filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
+
+sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")],group = filtered_annotated$product_name)
+
+#write.csv(sum_by_product_name,"sum_by_product_name.csv")
 
 #write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
