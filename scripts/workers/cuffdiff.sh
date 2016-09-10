@@ -3,6 +3,7 @@
 #PBS -W group_list=bhurwitz
 #PBS -q standard
 #PBS -l select=1:ncpus=6:mem=6gb
+#PBS -l cputime=3:00:00
 #PBS -l walltime=3:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
