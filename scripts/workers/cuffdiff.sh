@@ -2,12 +2,10 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q qualified
-###this is probably the memory required for the entire cuffdiff
-###on a 8 million gene set
-#PBS -l select=1:ncpus=12:mem=504gb:pcmem=8gb
+#PBS -l select=1:ncpus=12:mem=36gb
 ###and the amount of time required to run it
-#PBS -l walltime=180:00:00
-#PBS -l cput=234:00:00
+#PBS -l walltime=24:00:00
+#PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
 
@@ -42,4 +40,11 @@ export ALLBAMS="$SAMDIR/allbams"
 
 find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
 
-time cuffdiff -p 12 -L S1,S2,S3,S4 $GFF $(cat $ALLBAMS) 
+time cuffdiff -p 12 -L S1,S2,S3,S4 \
+    --no-diff \
+    --no-js-tests \
+    -c 1000 \
+    --max-mle-iterations 1 \
+    --quiet \
+    --no-update-check \
+    $GFF $(cat $ALLBAMS) 
