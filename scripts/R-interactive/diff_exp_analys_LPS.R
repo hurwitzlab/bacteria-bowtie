@@ -1,8 +1,8 @@
 setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
-#system(command = "./process.sh")
+system(command = "./process-LPS.sh")
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/manual_LPS_cuffdiff/")
 #
 # library(cummeRbund)
 #
@@ -12,8 +12,6 @@ setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
 #
 #cuff=readCufflinks(dbFile="cuffData.db",genome="multiple-bacteria",reload=T)
 
-gene_diff <- read.table("isoform_exp.diff",header = T)
-gene_diff <- gene_diff[order(gene_diff$gene,decreasing = T),]
 gene_counts <- read.table("isoforms.fpkm_tracking",header = T)
 gene_counts <- gene_counts[order(gene_counts$gene_short_name,decreasing = T),]
 
@@ -22,7 +20,9 @@ simple_gene_counts$sum<-rowSums(simple_gene_counts[,c("S1_FPKM","S2_FPKM","S3_FP
 filtered<-simple_gene_counts[simple_gene_counts$sum!=0,]
 filtered<-filtered[order(filtered$sum,decreasing = T),]
 
-annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "")
+annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "",as.is = T)
+lowercase_annotation<-data.frame((annotation[,1]),tolower(annotation[,2]))
+annotation<-lowercase_annotation
 colnames(annotation)<-c("tracking_id","product_name")
 
 gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
@@ -34,6 +34,6 @@ filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing =
 
 sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")],group = filtered_annotated$product_name)
 
-#write.csv(sum_by_product_name,"sum_by_product_name.csv")
+write.csv(sum_by_product_name,"sum_by_product_name.csv")
 
-#write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
+write.csv(filtered_annotated,"diff_exp_for_LPS.csv")
