@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 #PBS -W group_list=bhurwitz
-#PBS -q standard
-#PBS -l select=1:ncpus=6:mem=6gb
-#PBS -l walltime=3:00:00
+#PBS -q qualified
+#PBS -l select=1:ncpus=12:mem=36gb
+###and the amount of time required to run it
+#PBS -l walltime=24:00:00
+#PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
 
@@ -38,4 +40,11 @@ export ALLBAMS="$SAMDIR/allbams"
 
 find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
 
-time cuffdiff -p 6 -L S1,S2,S3,S4 $GFF $(cat $ALLBAMS) 
+time cuffdiff -p 12 -L S1,S2,S3,S4 \
+    --no-diff \
+    --no-js-tests \
+    -c 1000 \
+    --max-mle-iterations 1 \
+    --quiet \
+    --no-update-check \
+    $GFF $(cat $ALLBAMS) 

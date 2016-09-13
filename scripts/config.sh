@@ -49,9 +49,9 @@ export BFRAGBT2="$BACT_DIR/bfrag/genome"
 export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
 export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
 #bfrag + other usual suspects
-export ALLBT2="$BACT_DIR/all/genome"
-export ALLGFF="$BACT_DIR/all/all_fixed.gff"
-export ALLFASTA="$BACT_DIR/all/all.fna"
+export ALLBT2="$BACT_DIR/all/bowtie2_index/genome"
+export ALLGFF="$BACT_DIR/all/bowtie2_index/all.gff"
+export ALLFASTA="$BACT_DIR/all/bowtie2_index/all.fa"
 #
 # Where we can find the worker scripts
 #
@@ -64,6 +64,7 @@ export DATA_DIR="$PRJ_DIR/data"
 #export MOUSE_OUT="$DATA_DIR/mouse_out"
 export MOUSE_OUT="$DATA_DIR/topmouse"
 export BFRAG_OUT="$DATA_DIR/bfrag_out"
+#export ALLBACT_OUT="$DATA_DIR/theusualsuspects"
 export ALLBACT_OUT="$DATA_DIR/allbact_out"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
