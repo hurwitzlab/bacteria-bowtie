@@ -34,6 +34,8 @@ filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing =
 
 sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")],group = filtered_annotated$product_name)
 
-write.csv(sum_by_product_name,"sum_by_product_name.csv")
+sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")],group = filtered_annotated$gene)
 
+write.csv(sum_by_product_name,"sum_by_product_name.csv")
+write.csv(sum_by_gene_name,"sum_by_gene_name.csv")
 write.csv(filtered_annotated,"diff_exp_for_LPS.csv")
