@@ -22,4 +22,6 @@ find $(dirname $ALLGFF) -iname "\*splitgff\*" > $GFFLIST
 
 NUM_FILES=$(lc $GFFLIST)
 
-qsub -J 1:$NUM_FILES-$STEP_SIZE -V -j oe -o "$STDOUT_DIR" $WORKER_DIR/cuffdiff-array.sh
+echo Doing these many gffs: $NUM_FILES
+
+qsub -J 1-$NUM_FILES:$STEP_SIZE -V -j oe -o "$STDOUT_DIR" $WORKER_DIR/cuffdiff-array.sh
