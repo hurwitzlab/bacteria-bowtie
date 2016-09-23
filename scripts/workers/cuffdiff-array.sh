@@ -26,15 +26,15 @@ fi
 
 TMP_FILES=$(mktemp)
 
-get_lines $FILES_TO_PROCESS $TMP_FILES $PBS_ARRAY_INDEX $STEP_SIZE
+get_lines $GFFLIST $TMP_FILES $PBS_ARRAY_INDEX $STEP_SIZE
 
 NUM_FILES=$(lc $TMP_FILES)
 
 echo Found \"$NUM_FILES\" files to process
 
-cd $ALLBACT_OUT
+set -x
 
-echo Running cuffdiff with gff $GFF in $ALLBACT_OUT
+cd $ALLBACT_OUT
 
 export ALLBAMS="$ALLBACT_OUT/allbams"
 
@@ -47,7 +47,7 @@ while read GFF; do
     fi
 
     time cuffdiff -p 12 -L S1,S2,S3,S4 \
-        -o $(basename $GFF)
+        -o $(basename $GFF) \
         --no-diff \
         --no-js-tests \
         -c 1000 \

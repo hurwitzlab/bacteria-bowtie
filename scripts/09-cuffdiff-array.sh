@@ -16,11 +16,11 @@ STDOUT_DIR="$CWD/out/$PROG"
 
 init_dir "$STDOUT_DIR"
 
-$GFFLIST="$PRJ_DIR/tmp/gfflist"
+export GFFLIST="$PRJ_DIR/tmp/gfflist"
 
-find $(dirname $ALLGFF) -iname "\*splitgff\*" > $GFFLIST
+find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
 
-NUM_FILES=$(lc $GFFLIST)
+export NUM_FILES=$(lc $GFFLIST)
 
 echo Doing these many gffs: $NUM_FILES
 
