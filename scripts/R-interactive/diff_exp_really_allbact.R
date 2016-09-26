@@ -4,7 +4,7 @@ system(command = "./process-reallyall.sh")
 
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_reallyall")
 
-gene_counts <- read.table("total.fpkm_tracking",header = T)
+gene_counts <- read.table("total.fpkm_tracking",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = "character")
 gene_counts <- gene_counts[order(gene_counts$gene_short_name,decreasing = T),]
 
 simple_gene_counts<-gene_counts[,c("tracking_id","S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")]
