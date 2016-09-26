@@ -8,6 +8,8 @@ set -u
 source ./config.sh
 export CWD="$PWD"
 export STEP_SIZE=1
+#SPLIT_SIZE is number of lines to split each gff
+export SPLIT_SIZE=20
 echo Setting up log files...
 
 PROG=`basename $0 ".sh"`
@@ -18,10 +20,21 @@ init_dir "$STDOUT_DIR"
 
 export GFFLIST="$PRJ_DIR/tmp/gfflist"
 
-#don't need to count again, manually found the ones that need to be redone
-#find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
+find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
 
 export NUM_FILES=$(lc $GFFLIST)
+
+if [[ $NUM_FILES -eq 0 ]]; then
+    cd $(dirname $ALLGFF)
+
+    #PROTIP: l/$STEP_SIZE tells split to NOT split within lines!
+    split -e -d -n l/$SPLIT_SIZE $(basename $ALLGFF) splitgff
+        
+    find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
+
+    export NUM_FILES=$(lc $GFFLIST)
+
+fi
 
 echo Doing these many gffs: $NUM_FILES
 
