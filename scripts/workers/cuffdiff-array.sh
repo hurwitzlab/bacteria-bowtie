@@ -44,7 +44,12 @@ while read GFF; do
     
     if [[ ! -d $(basename $GFF) ]]; then
         mkdir -p $(basename $GFF)
+    else
+        rm -rf $GFF/*
     fi
+   
+    #checking to see if linebreaks are screwing things up
+    STRIPPED_GFF=$(printf "%s" "$(echo $GFF)")
 
     time cuffdiff -p 12 -L S1,S2,S3,S4 \
         -o $(basename $GFF) \
@@ -54,6 +59,6 @@ while read GFF; do
         --max-mle-iterations 1 \
         --quiet \
         --no-update-check \
-        $GFF $(cat $ALLBAMS) 
+        $STRIPPED_GFF $(cat $ALLBAMS) 
 
 done < "$TMP_FILES"
