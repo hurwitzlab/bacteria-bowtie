@@ -12,8 +12,6 @@ setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
 #
 #cuff=readCufflinks(dbFile="cuffData.db",genome="multiple-bacteria",reload=T)
 
-gene_diff <- read.table("isoform_exp.diff",header = T)
-gene_diff <- gene_diff[order(gene_diff$gene,decreasing = T),]
 gene_counts <- read.table("isoforms.fpkm_tracking",header = T)
 gene_counts <- gene_counts[order(gene_counts$gene_short_name,decreasing = T),]
 
