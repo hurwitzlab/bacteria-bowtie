@@ -18,7 +18,8 @@ init_dir "$STDOUT_DIR"
 
 export GFFLIST="$PRJ_DIR/tmp/gfflist"
 
-find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
+#don't need to count again, manually found the ones that need to be redone
+#find $(dirname $ALLGFF) -iname \*splitgff\* > $GFFLIST
 
 export NUM_FILES=$(lc $GFFLIST)
 
