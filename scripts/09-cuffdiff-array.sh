@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# This script is intended to make bams from sams and then sort
+# This script is intended to do cuffdiff for very large genomes/annotation files by splitting up the annotation file into chunks
 #
 unset module
 set -u
