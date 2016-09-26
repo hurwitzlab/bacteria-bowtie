@@ -23,8 +23,8 @@ echo "Removing extra headers"
 cd $RWORK_DIR
 head -1 total.fpkm_tracking > header
 egrep -v '^tracking_id.*' total.fpkm_tracking > temp01
-cat header temp01 > total.fpkm_tracking
-rm header
-rm temp01
+cat header temp01 > temp02
+cut -f 1,10,14,18,22 temp02 > total.fpkm_tracking
+rm header temp01 temp02
 
 echo "Leaving directory"
