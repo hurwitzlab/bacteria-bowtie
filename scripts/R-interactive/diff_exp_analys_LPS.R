@@ -1,6 +1,6 @@
-setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+#setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
-system(command = "./process-LPS.sh")
+#system(command = "./process-LPS.sh")
 
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/manual_LPS_cuffdiff/")
 #

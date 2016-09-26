@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [[ -e ./mini-config.sh ]]; then
-    source ./mini-config.sh
+if [[ -e ./mini-config-reallyall.sh ]]; then
+    source ./mini-config-reallyall.sh
 else
     echo "no config"
     exit 1
@@ -18,5 +18,5 @@ sleep 1
 
 perl -nle '($id)=/ID=([^;]*)/; ($gene)=/gene=([^;]*)/; print "$id\t$gene"' \
     $RWORK_DIR/all_fixed.gff > $RWORK_DIR/id_to_gene.tab
-    
+
 echo "Leaving directory"

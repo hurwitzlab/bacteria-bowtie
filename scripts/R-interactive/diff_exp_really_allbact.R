@@ -1,18 +1,10 @@
 setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
-#system(command = "./process.sh")
+system(command = "./process-reallyall.sh")
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_usualsuspects")
-#
-# library(cummeRbund)
-#
-# sqliteQuickSQL<-dbGetQuery
-#
-# dbBeginTransaction<-dbBegin
-#
-#cuff=readCufflinks(dbFile="cuffData.db",genome="multiple-bacteria",reload=T)
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffdiff_reallyall")
 
-gene_counts <- read.table("isoforms.fpkm_tracking",header = T)
+gene_counts <- read.table("total.fpkm_tracking",header = T)
 gene_counts <- gene_counts[order(gene_counts$gene_short_name,decreasing = T),]
 
 simple_gene_counts<-gene_counts[,c("tracking_id","S1_FPKM","S2_FPKM","S3_FPKM","S4_FPKM")]

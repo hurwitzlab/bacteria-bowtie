@@ -3,3 +3,4 @@ data/
 tmp/
 out/
 example_cuffdiff.sh
+.Rproj.user
