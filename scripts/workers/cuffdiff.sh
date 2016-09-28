@@ -30,6 +30,7 @@ elif [ $SAMDIR == $BFRAG_OUT ]; then
     GFF=$BFRAGGFF
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
     GFF=$ALLGFF
+    rRNAGFF=$ALLrRNAGFF
 fi
 
 cd $SAMDIR
@@ -40,11 +41,9 @@ export ALLBAMS="$SAMDIR/allbams"
 
 find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
 
-time cuffdiff -p 12 -L S1,S2,S3,S4 \
-    --no-diff \
-    --no-js-tests \
-    -c 1000 \
+time cuffquant -p 12 -L S1,S2,S3,S4 \
+    -M $rRNAGFF \
     --max-mle-iterations 1 \
     --quiet \
-    --no-update-check \
+    --no-length-correction \
     $GFF $(cat $ALLBAMS) 
