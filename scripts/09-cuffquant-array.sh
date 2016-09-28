@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# This script is intended to do cuffdiff for very large genomes/annotation files by splitting up the annotation file into chunks
+# This script is intended to do cuffquant for very large genomes/annotation files by splitting up the annotation file into chunks
 #
 unset module
 set -u
@@ -38,4 +38,4 @@ fi
 
 echo Doing these many gffs: $NUM_FILES
 
-qsub -J 1-$NUM_FILES:$STEP_SIZE -V -j oe -o "$STDOUT_DIR" $WORKER_DIR/cuffdiff-array.sh
+qsub -J 1-$NUM_FILES:$STEP_SIZE -V -j oe -o "$STDOUT_DIR" $WORKER_DIR/cuffquant-array.sh

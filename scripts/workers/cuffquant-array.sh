@@ -51,14 +51,12 @@ while read GFF; do
     #checking to see if linebreaks are screwing things up
     STRIPPED_GFF=$(printf "%s" "$(echo $GFF)")
 
-    time cuffdiff -p 12 -L S1,S2,S3,S4 \
+    time cuffquant -p 12 -L S1,S2,S3,S4 \
         -o $(basename $GFF) \
-        --no-diff \
-        --no-js-tests \
-        -c 1000 \
+        -M $ALLrRNAGFF \
         --max-mle-iterations 1 \
         --quiet \
-        --no-update-check \
+        --no-length-correction \
         $STRIPPED_GFF $(cat $ALLBAMS) 
 
 done < "$TMP_FILES"
