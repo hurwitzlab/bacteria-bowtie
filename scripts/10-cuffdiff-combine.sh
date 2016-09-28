@@ -20,7 +20,9 @@ cd $ALLBACT_OUT
 
 export GENECOUNTS="isoforms.fpkm_tracking"
 
-if [[ $(wc -l $(find ./ -iname \*$GENECOUNTS)) -ge 1 ]]; then
+set -x
+
+if [[ $(find ./ -iname \*$GENECOUNTS | wc -l) -ge 1 ]]; then
     find ./ -iname \*$GENECOUNTS -print0 | xargs -0 -I file cat file \
         > total.fpkm_tracking
 else
