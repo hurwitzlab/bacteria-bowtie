@@ -12,7 +12,7 @@ export STEP_SIZE=1
 
 if [[ $# = 0 ]]; then
     echo "Need to know what sam output directory to work on"
-    echo "e.g. ./07-cuffdiff.sh \$MOUSE_OUT"
+    echo "e.g. ./07-cuffquant.sh \$MOUSE_OUT"
     echo "ALSO: did you source config.sh?"
     exit 1
 fi
@@ -25,4 +25,4 @@ STDOUT_DIR="$CWD/out/$PROG"
 init_dir "$STDOUT_DIR/$(basename $1)"
 
 export SAMDIR=$1
-qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffdiff.sh
+qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffquant.sh
