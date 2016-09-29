@@ -43,7 +43,7 @@ export ALLBAMS="$SAMDIR/allbams"
 
 find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
 
-time cuffquant -p 12 -L S1,S2,S3,S4 \
+time cuffquant -p 12 \
     -M $rRNAGFF \
     --max-mle-iterations 1 \
     --quiet \
