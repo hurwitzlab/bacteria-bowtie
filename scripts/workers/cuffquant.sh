@@ -38,14 +38,21 @@ fi
 cd $SAMDIR
 
 echo Running cuffdiff with gff $GFF in $SAMDIR
+echo With sample "$SAMPLE".bam
 
-export ALLBAMS="$SAMDIR/allbams"
+#export ALLBAMS="$SAMDIR/allbams"
 
-find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
+#find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
+
+if [[ ! -d "$SAMPLE"-cuffquant-out ]]; then
+    mkdir -p "$SAMPLE"-cuffquant-out
+else
+    rm "$SAMPLE"-cuffquant-out/*
+fi
 
 time cuffquant -p 12 \
+    -o "$SAMPLE"-cuffquant-out
     -M $rRNAGFF \
-    --max-mle-iterations 1 \
     --quiet \
     --no-length-correction \
-    $GFF $(cat $ALLBAMS) 
+    $GFF "$SAMPLE".bam
