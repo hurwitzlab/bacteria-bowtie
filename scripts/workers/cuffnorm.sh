@@ -36,7 +36,6 @@ fi
 cd $SAMDIR
 
 echo Running cuffdiff with gff $GFF in $SAMDIR
-echo With sample "$SAMPLE".bam
 
 export ALLCXBS="$SAMDIR/allcxbs"
 
