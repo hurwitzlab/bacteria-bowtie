@@ -51,7 +51,7 @@ else
 fi
 
 time cuffquant -p 12 \
-    -o "$SAMPLE"-cuffquant-out
+    -o "$SAMPLE"-cuffquant-out \
     -M $rRNAGFF \
     --quiet \
     --no-length-correction \
