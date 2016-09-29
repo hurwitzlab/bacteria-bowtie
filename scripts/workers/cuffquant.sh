@@ -24,13 +24,15 @@ else
   exit 1
 fi
 
+set -x
+
 if [ $SAMDIR == $MOUSE_OUT ]; then
     GFF=$MOUSEGFF
 elif [ $SAMDIR == $BFRAG_OUT ]; then
     GFF=$BFRAGGFF
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
-    GFF=$ALLGFF
-    rRNAGFF=$ALLrRNAGFF
+    export GFF=$ALLGFF
+    export rRNAGFF=$ALLrRNAGFF
 fi
 
 cd $SAMDIR
