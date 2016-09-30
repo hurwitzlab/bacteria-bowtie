@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
 #
-# This script is intended to make bams from sams and then sort
+# This script is intended to run cuffnorm
 #
-#echo "Number of arguments is $#"
 unset module
 set -u
 source ./config.sh
 export CWD="$PWD"
-export STEP_SIZE=1
 
 if [[ $# = 0 ]]; then
     echo "Need to know what sam output directory to work on"
@@ -17,12 +15,17 @@ if [[ $# = 0 ]]; then
     exit 1
 fi
 
+
 echo Setting up log files...
+
 PROG=`basename $0 ".sh"`
 #Just going to put stdout and stderr together into stdout
 STDOUT_DIR="$CWD/out/$PROG"
 
 init_dir "$STDOUT_DIR/$(basename $1)"
 
+echo Submitting job...
+
 export SAMDIR=$1
-qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffquant.sh
+
+qsub -V -j oe -o "$STDOUT_DIR/$(basename $1)" $WORKER_DIR/cuffnorm.sh

@@ -2,7 +2,7 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q qualified
-#PBS -l select=1:ncpus=12:mem=36gb
+#PBS -l select=1:ncpus=12:mem=72gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
 #PBS -l cput=36:00:00
@@ -24,8 +24,6 @@ else
   exit 1
 fi
 
-set -x
-
 if [ $SAMDIR == $MOUSE_OUT ]; then
     GFF=$MOUSEGFF
 elif [ $SAMDIR == $BFRAG_OUT ]; then
@@ -38,21 +36,18 @@ fi
 cd $SAMDIR
 
 echo Running cuffdiff with gff $GFF in $SAMDIR
-echo With sample "$SAMPLE".bam
 
-#export ALLBAMS="$SAMDIR/allbams"
+export ALLCXBS="$SAMDIR/allcxbs"
 
-#find $SAMDIR -iname \*.bam -print | sort > $ALLBAMS
+find $SAMDIR -iname \*.cxb -print | sort > $ALLCXBS
 
-if [[ ! -d "$SAMPLE"-cuffquant-out ]]; then
-    mkdir -p "$SAMPLE"-cuffquant-out
+if [[ ! -d cuffnorm-out ]]; then
+    mkdir -p cuffnorm-out
 else
-    rm "$SAMPLE"-cuffquant-out/*
+    rm -r cuffnorm-out/*
 fi
 
-time cuffquant -p 12 \
-    -o "$SAMPLE"-cuffquant-out \
-    -M $rRNAGFF \
+time cuffnorm -p 12 --labels S1,S2,S3,S4 \
+    -o cuffnorm-out \
     --quiet \
-    --no-length-correction \
-    $GFF "$SAMPLE".bam
+    $GFF $(cat $ALLCXBS)
