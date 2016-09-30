@@ -25,6 +25,8 @@ filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing =
 
 sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$product_name)
 sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$gene)
+sum_by_gene_name$gene<-tolower(row.names(sum_by_gene_name))
+sum_by_product_name$product<-row.names(sum_by_product_name)
 
 write.csv(sum_by_product_name,"sum_by_product_name.csv")
 write.csv(sum_by_gene_name,"sum_by_gene_name.csv")
