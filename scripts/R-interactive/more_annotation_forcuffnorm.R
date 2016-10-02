@@ -2,7 +2,9 @@ setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
 sum_by_product_name <- read.csv("sum_by_product_name.csv")
+colnames(sum_by_product_name)[1]<-"product"
 sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
+colnames(sum_by_gene_name)[1]<-"gene"
 
 #for LPS pathway####
 lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
