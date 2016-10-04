@@ -47,13 +47,27 @@ just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
 poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
 poly_annot$product <- tolower(poly_annot$product)
 just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
-write.csv(just_poly_products_annot,"poly_products_annotated.csv")
+# write.csv(just_poly_products_annot,"poly_products_annotated.csv")
 
 #for m schaedleri####
 mschaedleri <- read.csv("MschaedleriFeatures.csv")
 mschaedleri_exp <- merge(mschaedleri,filtered_annotated,by.x="RefSeq.Locus.Tag",by.y="tracking_id",all=F)
 mschaedleri_exp_vs_all_products <- merge(mschaedleri_exp,sum_by_product_name,by.x="product_name",by.y="product",all=F)
 
-write.csv(mschaedleri_exp_vs_all_products,"mschaedleri_contribution_to_set.csv")
+#write.csv(mschaedleri_exp_vs_all_products,"mschaedleri_contribution_to_set.csv")
+
+#more diffexp stuff / heatmap####
 
 lps_with_tracking_id <- merge(x=filtered_annotated,y=lps_products,by.x="product_name",by.y="product",all=F)
+
+just_poly_from_excel <- read.csv("poly_products_for_kegg_figure.csv",header=T)
+
+row.names(just_poly_from_excel)<-just_poly_from_excel$id_on_kegg
+
+just_poly_from_excel <- data.matrix(just_poly_from_excel[,3:5])
+
+x=just_poly_from_excel
+
+oldPar <- par(no.readonly = T)
+
+heatmap(x, Rowv=NA, Colv=NA, col = cm.colors(256), scale="column", margins=c(5,10))
