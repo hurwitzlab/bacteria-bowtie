@@ -1,5 +1,7 @@
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
+library(RColorBrewer)
+
 #probably don't need these yet
 #library(KEGGgraph)
 #library(KEGGREST)
@@ -58,8 +60,6 @@ mschaedleri_exp_vs_all_products <- merge(mschaedleri_exp,sum_by_product_name,by.
 
 #more diffexp stuff / heatmap####
 
-lps_with_tracking_id <- merge(x=filtered_annotated,y=lps_products,by.x="product_name",by.y="product",all=F)
-
 just_poly_from_excel <- read.csv("poly_products_for_kegg_figure.csv",header=T)
 
 row.names(just_poly_from_excel)<-just_poly_from_excel$id_on_kegg
@@ -70,4 +70,45 @@ x=just_poly_from_excel
 
 oldPar <- par(no.readonly = T)
 
-heatmap(x, Rowv=NA, Colv=NA, col = cm.colors(256), scale="column", margins=c(5,10))
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+
+# and now heatmap for LPS####
+
+lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
+lps_annot$product <- tolower(lps_annot$product)
+just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
+#write.csv(just_lps_products_annot,"just_lps_products_annot.csv")
+
+just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
+
+row.names(just_lps_from_excel)<-just_lps_from_excel$ecnumber
+
+just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
+
+just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
+
+x=just_lps_from_excel
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+
+just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
+
+row.names(just_lps_from_excel)<-just_lps_from_excel$gene
+
+just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
+
+just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
+
+x=just_lps_from_excel
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
