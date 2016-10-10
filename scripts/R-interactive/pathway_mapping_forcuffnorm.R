@@ -22,12 +22,6 @@ colnames(sum_by_gene_name)[1]<-"gene"
 sum_by_gene_name<-sum_by_gene_name[,1:5]
 sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
-#getting more annotation####
-poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
-poly_annot$product <- tolower(poly_annot$product)
-just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
-# write.csv(just_poly_products_annot,"poly_products_annotated.csv")
-
 #for LPS pathway####
 lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
 lowercase_lps<-data.frame(tolower(lps_path[,1]))
@@ -51,6 +45,11 @@ poly_genes<-data.frame(gene=polyamines$V1[89:203])
 just_poly_products<-merge(x=sum_by_product_name,y=poly_product,all=F)
 just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
 
+#getting more annotation####
+poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
+poly_annot$product <- tolower(poly_annot$product)
+just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
+# write.csv(just_poly_products_annot,"poly_products_annotated.csv")
 #more diffexp stuff / heatmap####
 
 just_poly_from_excel <- read.csv("poly_products_for_kegg_figure.csv",header=T)
