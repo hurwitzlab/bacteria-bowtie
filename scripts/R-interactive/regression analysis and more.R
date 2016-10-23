@@ -1,4 +1,4 @@
-setwd("~/Google Drive/Hurwitz Lab/corbie pcr results")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
 tlr4 <- read.delim("tlr4-pcr-data.tab")
 
