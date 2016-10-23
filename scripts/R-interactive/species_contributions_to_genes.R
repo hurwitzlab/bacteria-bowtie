@@ -50,16 +50,19 @@ x=paste(just_lps_products$tracking_id,sep=",",collapse=",")
 feature_table = read.delim("FeatureTable.txt",colClasses = "character")
 just_lps_products<-merge(x=just_lps_products,y=feature_table[,c("Genome","RefSeq.Locus.Tag")],by.x="tracking_id",by.y="RefSeq.Locus.Tag",all.x=T,all.y=F)
 just_lps_products[54,]$Genome<-"Unknown"
-#,"S2_FPM","S3_FPM","S4_FPM"
+write.csv(just_lps_products,"just_lps_products_source_pivot.csv",row.names = F)
 
 melted <- melt(just_lps_products)
 jlp_recast <- dcast(melted,melted$product_name + melted$variable ~ melted$Genome,sum)
+write.csv(jlp_recast,"jlp_recast.csv",row.names = F)
+#[which(just_lps_products$product_name=="3-deoxy-d-manno-octulosonic-acid transferase"
 
-jlp_wide <- reshape(just_lps_products[which(just_lps_products$product_name=="3-deoxy-d-manno-octulosonic-acid transferase"),c("Genome","product_name","S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum")],
+jlp_wide <- reshape(just_lps_products[c("Genome","product_name","S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum")],
                 v.names = c("S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum"),
                 timevar = "Genome",
                 idvar = "product_name",
                 direction = "wide")
+write.csv(jlp_wide,"jlp_wide.csv")
 
 #this is confusing
 #i actually want a clustered, stacked bar chart
