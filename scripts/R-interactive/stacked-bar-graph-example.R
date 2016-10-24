@@ -34,3 +34,29 @@ legend("bottomright",
        legend = c("20-25", "15-20", "10-15", "5-10", "3-5", "0-3"), #in order from top to bottom
        fill = sequential[6:1], # 6:1 reorders so legend order matches graph
        title = "Years")
+
+#another example####
+#using ggplot2
+library(ggplot2)
+d <- data.frame(
+  year=factor(sample(2010:2014, 400, replace=T)),
+  continent=factor(sample(c("EU", "US", "Asia"), 400, replace=T)),
+  gender=factor(sample(c("male", "female"), 400, replace=T)),
+  amount=sample(20:5000, 400, replace=T)
+)
+ggplot(data=d, aes(x=year, y=amount)) + geom_bar(stat="identity")
+ggplot(data=d, aes(x=year, y=amount, fill=year)) + geom_bar(stat="identity")
+ggplot(data=d, aes(x=year, y=amount, fill=gender)) + geom_bar(stat="identity")
+
+d <- with(d, d[order(year, gender),])
+ggplot(data=d, aes(x=year, y=amount, fill=gender)) + geom_bar(stat="identity")
+
+d <- with(d, d[order(year, gender, continent),])
+ggplot(data=d, aes(x=continent, y=amount, fill=gender)) +
+  geom_bar(stat="identity") +
+  facet_grid(~year)
+ggplot(data=d, aes(x=continent, y=amount, fill=gender)) +
+  geom_bar(stat="identity") +
+  facet_grid(~year) +
+  labs(title="Customer Analysis 2010-2014", x="", y="$ Spent / Year", fill="Gender") +
+  theme(plot.title = element_text(size=25, margin=margin(t=20, b=20)))

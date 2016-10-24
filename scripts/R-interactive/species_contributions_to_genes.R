@@ -2,6 +2,7 @@ setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
 library(RColorBrewer)
 library(reshape2)
+library(ggplot2)
 
 #probably don't need these yet
 #library(KEGGgraph)
@@ -68,3 +69,12 @@ write.csv(jlp_wide,"jlp_wide.csv")
 #i actually want a clustered, stacked bar chart
 #so each cluster will be defined by product_name and S1,S2,S3,S4
 #then each stack will be delineated by Genome
+
+#trying again####
+jlp<-read.csv("just_lps_products_source_pivot.csv")
+jlp<-jlp[,c(2:6,8,9)]
+melted<-melt(jlp)
+colnames(melted)<-c("product_name","gene","genome","sample","count")
+melted$sample<-gsub("_FPM","",melted$sample)
+melted <- with(melted, melted[order(product_name, genome, sample),])
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) + guides(fill=FALSE)
