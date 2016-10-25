@@ -75,9 +75,12 @@ jlp<-read.csv("just_lps_products_source_pivot.csv")
 jlp<-jlp[,c(2:6,8,9)]
 
 #just lpxC and lpxD
-jlp<-read.csv("for first graph.csv")
+#jlp<-read.csv("for first graph.csv")
+
+#just kdtA and waaL
+jlp<-read.csv("for second graph.csv")
 melted<-melt(jlp)
 colnames(melted)<-c("product_name","gene","genome","sample","count")
 melted$sample<-gsub("_FPM","",melted$sample)
 melted <- with(melted, melted[order(product_name, genome, sample),])
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) + guides(fill=FALSE)
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) #+ guides(fill=FALSE)
