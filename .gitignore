@@ -4,3 +4,5 @@ tmp/
 out/
 example_cuffdiff.sh
 .Rproj.user
+DS_STORE
+.DS_STORE
