@@ -42,18 +42,21 @@ export MOUSETRANS="$REF_DIR/tophat_mouse/ensembl/bowtie2/transcriptome"
 #
 #
 # Where bacteria genomes are
+# and annotation
 #
 export BACT_DIR="$PRJ_DIR/genomes"
 #bfrag
 export BFRAGBT2="$BACT_DIR/bfrag/genome"
 export BFRAGGFF="$BACT_DIR/bfrag/genome.gff"
 export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
-#bfrag + other usual suspects
+#all 1944 best strains 
 export ALLBT2="$BACT_DIR/all/bowtie2_index/genome"
 #export ALLGFF="$BACT_DIR/all/bowtie2_index/all.gff"
 export ALLGFF="$BACT_DIR/all/bowtie2_index/all-refseq-CDS.gff"
 export ALLrRNAGFF="$BACT_DIR/all/bowtie2_index/all-refseq-rRNA.gff"
 export ALLFASTA="$BACT_DIR/all/bowtie2_index/all.fa"
+#all those patric CDS tabs for the 1944
+export ALLPATRIC_ANNOT="$BACT_DIR/all/patric_annot"
 #
 # Where we can find the worker scripts
 #
@@ -74,6 +77,17 @@ export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"
 
 # place to put temp stuff like lists of files
 export TEMP_DIR="$PRJ_DIR/tmp"
+
+#where patric annotation is
+export PATRIC_ANNOT="/rsgrps/bhurwitz/hurwitzlab/data/reference/patric_annot/patric_cds"
+#where patric gff's are
+export PATRIC_GFFS="/rsgrps/bhurwitz/hurwitzlab/data/reference/patric_annot/gff"
+export REFSEQ_GFFS=$PATRIC_GFFS
+#source file with patric accn's (first field) [space] and patric strain/genome number (second field)
+export SOURCE_MAP="$DATA_DIR/just-strain-and-accn-right-list.txt"
+#just the unique strains/genomes
+export STRAINS="$DATA_DIR/just-strain-list.txt"
+
 
 
 #
