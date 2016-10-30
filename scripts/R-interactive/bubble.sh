@@ -6,11 +6,12 @@
 # requires inkscape obviously
 
 if [[ $# = 0 ]]; then
-  echo "First argument is your .csv file"
-  echo "Second argument is the NAME of you .pdf file you want"
-  echo "WITHOUT the extension"
+    echo "First argument is your .csv file"
+    echo "Second argument is the NAME of you .pdf file you want"
+    echo "WITHOUT the extension"
+    exit 1
 fi
 
-perl ./bubble.pl -o $2.svg $1
+perl ./bubble.pl -s -o $2.svg $1
 sleep 1
 inkscape $2.svg --export-pdf=$2.pdf
