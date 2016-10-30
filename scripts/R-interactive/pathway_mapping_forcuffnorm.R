@@ -22,17 +22,25 @@ sum_by_gene_name<-sum_by_gene_name[,1:5]
 sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
 #now we will attempt to add pathways####
-patric_annotation <- read.delim("all.PATRIC.cds.tab")
+#patric_annotation <- read.delim("all.PATRIC.cds.tab")
 #that took over 5 minutes
 #probably butter to use 'cut' to trim down to the refseq_locus_tag and pathway columns and then load the tab file
+# LIKE SO (already done) cut -f 7,21 all.PATRIC.cds.tab > refseq_tag_to_pathway.tab
+# and just get lines where pathways are actually known
+# grep "\S\t\S" refseq_tag_to_pathway.tab > temp.tab
+# mv temp.tab refseq_tag_to_pathway.tab
+patric_annotation <- read.delim("refseq_tag_to_pathway.tab")
 with_pathways<-merge(x=filtered_annotated,y=patric_annotation[,c("refseq_locus_tag","pathway")],by.x="tracking_id",by.y="refseq_locus_tag")
-with_pathways<-with_pathways[grep(".+",pathway),]
+with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
 sum_by_kegg_pathway$sum<-rowSums(sum_by_kegg_pathway[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
 shortened<-sum_by_kegg_pathway[sum_by_kegg_pathway$sum>mean(sum_by_kegg_pathway$sum),]
-top_forty<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:40],]
+top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
+
+#write.csv(shortened,"sum_by_kegg_pathway_above_mean.csv")
+#write.csv(top_sixty_five,"sum_by_kegg_pathway_top_sixty_five.csv")
 
 # Maybe use later
 # #for LPS pathway####
