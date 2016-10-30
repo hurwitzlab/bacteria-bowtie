@@ -15,3 +15,5 @@ fi
 perl ./bubble.pl -s -o $2.svg $1
 sleep 1
 inkscape $2.svg --export-pdf=$2.pdf
+sleep 1
+rm $2.svg
