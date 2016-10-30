@@ -6,3 +6,4 @@ example_cuffdiff.sh
 .Rproj.user
 DS_STORE
 .DS_STORE
+sum_by_kegg_pathway*
