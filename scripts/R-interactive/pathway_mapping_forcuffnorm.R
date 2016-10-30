@@ -36,11 +36,20 @@ with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
 sum_by_kegg_pathway$sum<-rowSums(sum_by_kegg_pathway[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
-shortened<-sum_by_kegg_pathway[sum_by_kegg_pathway$sum>mean(sum_by_kegg_pathway$sum),]
-top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
 
-#write.csv(shortened,"sum_by_kegg_pathway_above_mean.csv")
-#write.csv(top_sixty_five,"sum_by_kegg_pathway_top_sixty_five.csv")
+#formatting for stupid bubble plot, which i bet could be done in R
+sum_by_kegg_pathway$Name<-row.names(sum_by_kegg_pathway)
+
+shortened<-sum_by_kegg_pathway[sum_by_kegg_pathway$sum>mean(sum_by_kegg_pathway$sum),]
+shortened<-shortened[order(shortened$sum , decreasing = T),]
+shortened<-shortened[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
+#top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
+
+write.table(shortened,"sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+
+#setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+
+#write.csv(top_sixty_five,"sum_by_kegg_pathway_top_sixty_five.csv",quote = T,row.names = F)
 
 # Maybe use later
 # #for LPS pathway####
