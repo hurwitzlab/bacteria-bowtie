@@ -81,7 +81,34 @@ for (i in i:(length(medians_pcr[,1])-1)) {
 #first need to remove rows with zeros
 just_lps_products[just_lps_products==0]<-NA
 lpsProductsNoZeroes = na.omit(just_lps_products)
+row.names(lpsProductsNoZeroes) = lpsProductsNoZeroes[,'product']
+lpsProductsNoZeroes = lpsProductsNoZeroes[,c('s+h-','s-h-','s+h+','s-h+')]
 
+i=1
+for (i in i:(length(medians_pcr[,1]))) {
+  j=1
+  for (j in j:(length(lpsProductsNoZeroes[,1]))) {
+    temp1 = as.matrix(medians_pcr[i,])
+    temp2 = as.matrix(lpsProductsNoZeroes[j,])
+    print(paste(row.names(medians_pcr[i,]),"vs.",row.names(lpsProductsNoZeroes[j,])))
+    print(cor.test(temp1,temp2))
+  }
+}
+
+  j = i+1
+  if (i == 1) {
+    for (j in j:(length(medians_pcr[,1]))) {
+      temp2 = as.matrix(medians_pcr[j,])
+      print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
+      print(cor.test(temp1,temp2))
+    }
+  }
+  if (i == 2) {
+    temp2 = as.matrix(medians_pcr[3,])
+    print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
+    print(cor.test(temp1,temp2))
+  }
+}
 
 
 #old stuff####
