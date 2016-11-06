@@ -54,9 +54,9 @@ if (defined $ARGV[0]) {
 
 # Usage, or bad arguments:
 if (!$result or !defined $OUTPUT or !defined $INPUT) {
-  die("Usage: $0 [-r] [-s] [-l] [-x xsize] [-y ysize] -o output.svg input.csv
+  die("Usage: $0 [-r] [-s] [-l] [-x xsize] [-y ysize] -o output.svg input.tab
   
-    This program will read the input csv file and produce an SVG image
+    This program will read the input tab-delimited file and produce an SVG image
     showing the data as a bubble chart.  The first value in the first
     row becomes the graph title, and the remainder of the first row
     becomes column labels.  The first value in each of the remaining rows
@@ -95,8 +95,8 @@ while (<IN>) {
 	  if (m/\r[^\n]/) {$/="\r";seek(IN,0,0);$eolchecked=1;next;} # Mac
 	  if (m/\n[^\n\r]/) {$/="\r";seek(IN,0,0);$eolchecked=1;next;} # Unix (shouldn't happen)
   }
-  s/[\r\n]+$//;
-  my @f=map {s/"//g;$_} split(/[\t,]/);
+  s/[\r\n]+$//; #strip eol
+  my @f=map {s/"//g;$_} split(/[\t]/); #only accept tab-delimited
   if (@header==0) {@header=@f;next;}
   $f[0]=~s/_/ /g;
   push @data,[@f];
