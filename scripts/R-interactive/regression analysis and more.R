@@ -96,7 +96,16 @@ for (i in i:(length(medians_pcr[,1]))) {
 }
 
 plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]),xlab="Relative expression of TLR4",ylab="Relative expression of udpHNacetylGD")
-model<-lm(medians_pcr["tlr4",],lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",])
+model<-lm(unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]) ~ unlist(medians_pcr["tlr4",]))
+abline(40433,4943,col="blue")
+
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]),xlab="Relative expression of TLR2",ylab="Relative expression of udpHNacetylGD")
+model<-lm(unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]) ~ unlist(medians_pcr["tlr2",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+#doesn't work
+#model<-lm(medians_pcr["tlr4",] ~ lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",])
+
+model<-lm(medians_pcr ~ lpsProductsNoZeroes)
 
 # #old stuff####
 # boxplot(tlr4$Values ~ tlr4$Series,col='white')
