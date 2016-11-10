@@ -44,36 +44,44 @@ nfkb <- read.delim("nfkb-pcr-data.tab")
 nfkb$Series <- factor(nfkb$Series,order)
 tlr2 <- read.delim("tlr2-pcr-data.tab")
 tlr2$Series <- factor(tlr2$Series,order)
+#another inflammatory pathway gene in mice
+irak4 <- read.delim("irak4-pcr-data.tab")
+irak4$Series <- factor(irak4$Series,order)
 
 boxplot(tlr4$Values~tlr4$Series) -> tlr4box
 boxplot(tlr2$Values~tlr2$Series) -> tlr2box
 boxplot(nfkb$Values~nfkb$Series) -> nfkbbox
+boxplot(irak4$Values~irak4$Series) -> irak4box
 
 #these are the medians from boxplot objects
 tlr4box$stats[3,] -> medians_tlr4
 tlr2box$stats[3,] -> medians_tlr2
 nfkbbox$stats[3,] -> medians_nfkb
-medians_pcr = data.frame(row.names = c("nfkb","tlr2","tlr4"),rbind(medians_nfkb,medians_tlr2,medians_tlr4))
+irak4box$stats[3,] -> medians_irak4
+medians_pcr = data.frame(
+  row.names = c("nfkb","tlr2","tlr4","irak4"),
+  rbind(medians_nfkb,medians_tlr2,medians_tlr4,medians_irak4)
+  )
 colnames(medians_pcr) = order
 
 #lets see if these genes correlate with themselves
-i=1
-for (i in i:(length(medians_pcr[,1])-1)) {
-  temp1 = as.matrix(medians_pcr[i,])
-  j = i+1
-  if (i == 1) {
-    for (j in j:(length(medians_pcr[,1]))) {
-      temp2 = as.matrix(medians_pcr[j,])
-      print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
-      print(cor.test(temp1,temp2))
-    }
-  }
-  if (i == 2) {
-    temp2 = as.matrix(medians_pcr[3,])
-    print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
-    print(cor.test(temp1,temp2))
-  }
-}
+# i=1
+# for (i in i:(length(medians_pcr[,1])-1)) {
+#   temp1 = as.matrix(medians_pcr[i,])
+#   j = i+1
+#   if (i == 1) {
+#     for (j in j:(length(medians_pcr[,1]))) {
+#       temp2 = as.matrix(medians_pcr[j,])
+#       print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
+#       print(cor.test(temp1,temp2))
+#     }
+#   }
+#   if (i == 2) {
+#     temp2 = as.matrix(medians_pcr[3,])
+#     print(paste(row.names(medians_pcr[i,]),"vs.",row.names(medians_pcr[j,])))
+#     print(cor.test(temp1,temp2))
+#   }
+# }
 
 #tlr2 correlates with tlr4
 
@@ -105,7 +113,7 @@ abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
 #doesn't work
 #model<-lm(medians_pcr["tlr4",] ~ lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",])
 
-model<-lm(medians_pcr ~ lpsProductsNoZeroes)
+
 
 # #old stuff####
 # boxplot(tlr4$Values ~ tlr4$Series,col='white')
