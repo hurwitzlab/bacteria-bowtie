@@ -43,9 +43,10 @@ sum_by_kegg_pathway$Name<-row.names(sum_by_kegg_pathway)
 shortened<-sum_by_kegg_pathway[sum_by_kegg_pathway$sum>mean(sum_by_kegg_pathway$sum),]
 shortened<-shortened[order(shortened$sum , decreasing = T),]
 shortened<-shortened[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
-#top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
+top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
+top_sixty_five<-top_sixty_five[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
 
-write.table(shortened,"sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+write.table(top_sixty_five,"~/tophat-bacteria/scripts/R-interactive/sum_by_kegg_pathway_top_sixty_five.tab", sep = "\t", quote = T,row.names = F)
 
 #setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
 
