@@ -84,3 +84,24 @@ colnames(melted)<-c("product_name","gene","genome","sample","count")
 melted$sample<-gsub("_FPM","",melted$sample)
 melted <- with(melted, melted[order(product_name, genome, sample),])
 ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) #+ guides(fill=FALSE)
+
+#Let's try polyamines now####
+#Got all.PATRIC.cds.tab from the server and cut down to just genome names and refseq locus tags
+#system("cut -f2,7 all.PATRIC.cds.tab > genome-name_to_refseq-locus-tag")
+genome_to_feature <- read.delim("genome-name_to_refseq-locus-tag")
+
+polyamines<-read.table("polyamine-search-list",sep="\t",comment.char = "#")
+polyamines<-data.frame(tolower(polyamines[,1]))
+colnames(polyamines)<-"V1"
+polyamines<-unique(polyamines)
+poly_product<-data.frame(product=polyamines$V1[1:88])
+poly_genes<-data.frame(gene=polyamines$V1[89:203])
+
+just_poly_products<-merge(x=sum_by_product_name,y=poly_product,all=F)
+just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
+
+#getting more annotation for poly####
+poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
+poly_annot$product <- tolower(poly_annot$product)
+just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
+
