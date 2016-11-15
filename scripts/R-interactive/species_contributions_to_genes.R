@@ -104,4 +104,37 @@ just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
 poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
 poly_annot$product <- tolower(poly_annot$product)
 just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
+attach(just_poly_products_annot)
 
+important<-just_poly_products_annot[ecnumber %in% c("[EC:3.5.1.53]","[EC:4.1.1.96]"),]
+important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
+important <- merge(x=important2[,c(1,3,5:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
+melted<-melt(important[,2:8])
+colnames(melted)<-c("product_name","gene","genome","sample","count")
+melted$sample<-gsub("_FPM","",melted$sample)
+melted <- with(melted, melted[order(product_name, genome, sample),])
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) #+ guides(fill=FALSE)
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) + guides(fill=FALSE)
+detach(just_poly_products_annot)
+
+#And now for butanoate####
+butanoate_annot=read.table("butanoate_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
+butanoate_path<-data.frame(unique(butanoate_annot$product))
+lowercase_butanoate<-data.frame(tolower(butanoate_path[,1]))
+butanoate_path<-lowercase_butanoate
+colnames(butanoate_path)<-"V1"
+rm(lowercase_butanoate)
+just_butanoate_products<-merge(x=sum_by_product_name,y=butanoate_path,by.x="product",by.y="V1",all=F)
+butanoate_annot$product <- tolower(butanoate_annot$product)
+just_butanoate_products_annot <- merge(x=butanoate_annot,y=just_butanoate_products,by="product",all.x=F,all.y=T)
+attach(just_butanoate_products_annot)
+
+important<-just_butanoate_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
+important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
+important <- merge(x=important2[,c(1,3,5:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
+melted<-melt(important[,2:8])
+colnames(melted)<-c("product_name","gene","genome","sample","count")
+melted$sample<-gsub("_FPM","",melted$sample)
+melted <- with(melted, melted[order(product_name, genome, sample),])
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) #+ guides(fill=FALSE)
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) + guides(fill=FALSE)
