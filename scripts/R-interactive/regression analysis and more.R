@@ -110,15 +110,29 @@ for (i in i:(length(medians_pcr[,1]))) {
   }
 }
 
-plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]),xlab="Relative expression of TLR4",ylab="Relative expression of udpHNacetylGD")
-model<-lm(unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]) ~ unlist(medians_pcr["tlr4",]))
-abline(40433,4943,col="blue")
-
-plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]),xlab="Relative expression of TLR2",ylab="Relative expression of udpHNacetylGD")
-model<-lm(unlist(lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",]) ~ unlist(medians_pcr["tlr2",]))
+#correlation plots####
+#lpxD and tlr4
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxD")
+model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr4",]))
 abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
-#doesn't work
-#model<-lm(medians_pcr["tlr4",] ~ lpsProductsNoZeroes["udp-3-o-[3-hydroxymyristoyl] n-acetylglucosamine deacetylase",])
+
+#lpxC and tlr4
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxC")
+model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr4",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+
+#lpxD and tlr2
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxD")
+
+model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr2",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+
+#lpxC and tlr2
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxC")
+
+model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr2",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+
 
 
 
