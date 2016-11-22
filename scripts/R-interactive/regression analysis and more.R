@@ -47,20 +47,26 @@ tlr2$Series <- factor(tlr2$Series,order)
 #another inflammatory pathway gene in mice
 irak4 <- read.delim("irak4-pcr-data.tab")
 irak4$Series <- factor(irak4$Series,order)
+#and another
+cd14 <- read.delim("CD14-pcr-data.tab")
+cd14$Series <- factor(cd14$Series,order)
 
 boxplot(tlr4$Values~tlr4$Series) -> tlr4box
 boxplot(tlr2$Values~tlr2$Series) -> tlr2box
 boxplot(nfkb$Values~nfkb$Series) -> nfkbbox
 boxplot(irak4$Values~irak4$Series) -> irak4box
+boxplot(cd14$Values~cd14$Series) -> cd14box
 
 #these are the medians from boxplot objects
 tlr4box$stats[3,] -> medians_tlr4
 tlr2box$stats[3,] -> medians_tlr2
 nfkbbox$stats[3,] -> medians_nfkb
 irak4box$stats[3,] -> medians_irak4
+cd14box$stats[3,] -> medians_cd14
 medians_pcr = data.frame(
-  row.names = c("nfkb","tlr2","tlr4","irak4"),
-  rbind(medians_nfkb,medians_tlr2,medians_tlr4,medians_irak4)
+  row.names = c("nfkb","tlr2","tlr4","irak4","cd14"),
+  rbind(medians_nfkb,medians_tlr2,medians_tlr4,medians_irak4,
+        medians_cd14)
   )
 colnames(medians_pcr) = order
 
@@ -91,6 +97,7 @@ just_lps_products[just_lps_products==0]<-NA
 lpsProductsNoZeroes = na.omit(just_lps_products)
 row.names(lpsProductsNoZeroes) = lpsProductsNoZeroes[,'product']
 lpsProductsNoZeroes = lpsProductsNoZeroes[,c('s+h-','s-h-','s+h+','s-h+')]
+row.names(lpsProductsNoZeroes) = c("waaL/rfaL","lpxD","lpxC")
 
 i=1
 for (i in i:(length(medians_pcr[,1]))) {
@@ -98,7 +105,7 @@ for (i in i:(length(medians_pcr[,1]))) {
   for (j in j:(length(lpsProductsNoZeroes[,1]))) {
     temp1 = as.matrix(medians_pcr[i,])
     temp2 = as.matrix(lpsProductsNoZeroes[j,])
-    print(paste(row.names(medians_pcr[i,]),"vs.",row.names(lpsProductsNoZeroes[j,])))
+    print(paste("Does",row.names(medians_pcr[i,]),"correlate with",row.names(lpsProductsNoZeroes[j,]),"?"))
     print(cor.test(temp1,temp2))
   }
 }
