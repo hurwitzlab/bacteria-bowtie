@@ -1,2 +1,4 @@
-total.fpkm_tracking
-thing.pdf
+*.fpkm_tracking
+*.pdf
+*.csv
+*.tab
