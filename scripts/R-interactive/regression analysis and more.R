@@ -112,140 +112,24 @@ for (i in i:(length(medians_pcr[,1]))) {
 
 #correlation plots####
 #lpxD and tlr4
-plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxD")
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
 model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr4",]))
-abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
 #lpxC and tlr4
-plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxC")
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
 model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr4",]))
-abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
 #lpxD and tlr2
-plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxD")
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
 
 model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr2",]))
-abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
 #lpxC and tlr2
-plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxC")
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
 
 model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr2",]))
-abline(model$coefficients[[1]],model$coefficients[[2]],col="blue")
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
-
-
-
-# #old stuff####
-# boxplot(tlr4$Values ~ tlr4$Series,col='white')
-#
-# #S-h- vs. S+h-
-# t.test(tlr4[tlr4$Series=='s+h-',]$Values,tlr4[tlr4$Series=='s-h-',]$Values)
-#
-# #S-h- vs. S+h+
-# t.test(tlr4[tlr4$Series=='s-h-',]$Values,tlr4[tlr4$Series=='s+h+',]$Values)
-#
-# #S+h+ vs. S-h+
-# t.test(tlr4[tlr4$Series=='s+h+',]$Values,tlr4[tlr4$Series=='s-h+',]$Values)
-#
-# #S+h- vs. S-h+
-# t.test(tlr4[tlr4$Series=='s+h-',]$Values,tlr4[tlr4$Series=='s-h+',]$Values)
-#
-# means_lps <- data.frame(series=c('s+h-','s-h-','s+h+','s-h+'),values=c(2997.993999,4566.114029,5776.721804,6506))
-# means_lps$series <- factor(means_lps$series,order)
-#
-# #scaling to minimum tlr4 expression
-# min(tlr4$Values) #0.311
-# min(means_lps$values) #2997.994
-# scale_adjust = min(tlr4$Values)-min(means_lps$values)
-#
-# par(mar = c(5,5,2,5))
-# boxplot(tlr4$Values ~ tlr4$Series,col='white',ylab='TLR4 relative expression',xlab='Genotype (SMAD3 + or -) and Phenotype (H.hep + or -)')
-# par(new=T)
-# plot(x=c(0.5,1.5,2.5,3.5),means_lps$values+scale_adjust, type='l', col='red', axes=F, xlab=NA, ylab=NA,xlim=c(0,4))
-# axis(side = 4)
-# mtext(side = 4, line = 3, 'B.fragilis scaled counts')
-# legend("topleft", legend=c('B.fragilis counts','TLR4 expression'), lty=c(1,0), pch=c(NA, 22), col=c("red", "black"))
-#
-# by_tlr4<-by(tlr4$Values,tlr4[,"Series"],median)
-# #by_tlr4<-by(tlr4$Values,tlr4[,"Series"],mean)
-# medians_tlr4<-data.frame(series=c('s+h-','s-h-','s+h+','s-h+'),values=c(by_tlr4[[1]],by_tlr4[[2]],by_tlr4[[3]],by_tlr4[[4]]))
-# cor(medians_tlr4$values,means_lps$values,method = "p")
-# cor.test(medians_tlr4$values,means_lps$values,method = "p")
-#
-# b_model <- lm(means_lps$values ~ medians_tlr4$values)
-# plot(medians_tlr4$values,means_lps$values,ylab='B.fragilis normalized counts',xlab='TLR4 relative expression')
-# abline(3467,238,col='blue')
-# legend("bottomright", legend=c('Line of regression','Correlated values', 'pvalue = 0.09862'), lty=c(1,0,0), pch=c(NA, 1,-1), col=c("blue", "black", "black"))
-#
-# melted_lps <- melt(just_lps_genes)
-# by_lps <- by(melted_lps$value,melted_lps[,"variable"],mean)
-# means_lps<-data.frame(series=c('s+h+','s-h+','s+h-','s-h-'),values=c(by_lps[[1]],by_lps[[2]],by_lps[[3]],by_lps[[4]]))
-# row.names(means_lps)<-means_lps$series
-# means_lps<-means_lps[c('s+h-','s-h-','s+h+','s-h+'),]
-# lin_model<-lm(medians_tlr4$values ~ means_lps$value)
-# plot(means_lps$values,medians_tlr4$values)
-# cor(means_lps$values,medians_tlr4$values)
-# cor.test(means_lps$values,medians_tlr4$values)
-#
-# boxplot(nfkb$Values ~ nfkb$Series,col='white')
-#
-# #S-h- vs. S+h-
-# t.test(nfkb[nfkb$Series=='s+h-',]$Values,nfkb[nfkb$Series=='s-h-',]$Values)
-#
-# #S-h- vs. S+h+
-# t.test(nfkb[nfkb$Series=='s-h-',]$Values,nfkb[nfkb$Series=='s+h+',]$Values)
-#
-# #S+h+ vs. S-h+
-# t.test(nfkb[nfkb$Series=='s+h+',]$Values,nfkb[nfkb$Series=='s-h+',]$Values)
-#
-# #S+h- vs. S-h+
-# t.test(nfkb[nfkb$Series=='s+h-',]$Values,nfkb[nfkb$Series=='s-h+',]$Values)
-#
-# #S+h- vs. S+h+
-# t.test(nfkb[nfkb$Series=='s+h-',]$Values,nfkb[nfkb$Series=='s+h+',]$Values)
-#
-# #scaling to min of minimum nfkb expression
-# min(nfkb$Values) #0.4322686
-# min(means_lps$values) #2997.994
-# scale_adjust = min(nfkb$Values)-min(means_lps$values)
-# par(mar = c(5,5,2,5))
-# boxplot(nfkb$Values ~ nfkb$Series,col='white',ylab='NFkB relative expression',xlab='Genotype (SMAD3 + or -) and Phenotype (H.hep + or -)')
-# par(new=T)
-# plot(x=c(0.5,1.5,2.5,3.5),means_lps$values+scale_adjust, type='l', col='red', axes=F, xlab=NA, ylab=NA,xlim=c(0,4))
-# axis(side = 4)
-# mtext(side = 4, line = 3, 'B.fragilis scaled counts')
-# legend("topleft", legend=c('B.fragilis counts','NFkB expression'), lty=c(1,0), pch=c(NA, 22), col=c("red", "black"))
-#
-#
-# clusterof2 <- rbind(nfkb,tlr4)
-# clusterof2$Series <- factor(clusterof2$Series,order)
-# boxplot(Values ~ Series, data = clusterof2)
-#
-# by_clusterof2<-by(clusterof2$Values,clusterof2[,"Series"],median)
-# #by_clusterof2<-by(clusterof2$Values,clusterof2[,"Series"],mean)
-# medians_clusterof2<-data.frame(series=c('s+h-','s-h-','s+h+','s-h+'),values=c(by_clusterof2[[1]],by_clusterof2[[2]],by_clusterof2[[3]],by_clusterof2[[4]]))
-# cor(medians_clusterof2$values,means_lps$values,method = "p")
-# cor.test(medians_clusterof2$values,means_lps$values,method = "p")
-#
-# b_model <- lm(means_lps$values ~ medians_clusterof2$values)
-# plot(medians_clusterof2$values,means_lps$values,ylab='B.fragilis normalized counts',xlab='TLR4+nfkb median expression')
-# abline(1620,1323,col='blue')
-# legend("bottomright", legend=c('Line of regression','Correlated values', 'pvalue = 0.01459'), lty=c(1,0,0), pch=c(NA, 1,-1), col=c("blue", "black", "black"))
-#
-# boxplot(tlr2$Values ~ tlr2$Series,col='white')
-#
-# clusterof3 <- rbind(nfkb,tlr4,tlr2)
-# clusterof3$Series <- factor(clusterof3$Series,order)
-# boxplot(Values ~ Series, data = clusterof3)
-#
-# by_clusterof3<-by(clusterof3$Values,clusterof3[,"Series"],median)
-# #by_clusterof3<-by(clusterof3$Values,clusterof3[,"Series"],mean)
-# medians_clusterof3<-data.frame(series=c('s+h-','s-h-','s+h+','s-h+'),values=c(by_clusterof3[[1]],by_clusterof3[[2]],by_clusterof3[[3]],by_clusterof3[[4]]))
-# cor(medians_clusterof3$values,means_lps$values,method = "p")
-# cor.test(medians_clusterof3$values,means_lps$values,method = "p")
-#
-# b_model <- lm(means_lps$values ~ medians_clusterof3$values)
-# plot(medians_clusterof3$values,means_lps$values,ylab='B.fragilis normalized counts',xlab='TLR4/TLR2/nfkb relative expression')
-# abline(2205,1128,col='blue')
-# legend("bottomright", legend=c('Line of regression','Correlated values', 'pvalue = 0.1247'), lty=c(1,0,0), pch=c(NA, 1,-1), col=c("blue", "black", "black"))
