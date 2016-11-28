@@ -2,3 +2,6 @@
 *.pdf
 *.csv
 *.tab
+.Rhistory
+*.Rhistory
+Rhistory

@@ -43,27 +43,27 @@ lps_products<-data.frame(product=lps_path[1:34,])
 just_lps_products<-merge(x=filtered_annotated,y=lps_products,by.x="product_name",by.y="product",all=F)
 just_lps_genes<-merge(x=filtered_annotated,y=lps_genes,by="gene",all=F)
 
-x=paste(just_lps_products$tracking_id,sep=",",collapse=",")
-#copied and pasted x into macvim then %s/,/,\n/g it
-#then copied and pasted that into patric feature finder
-#at https://www.patricbrc.org/portal/portal/patric/GenomicFeature?cType=taxon&cId=131567&dm=
-#and downloaded the results as "FeatureTable.txt"
-feature_table = read.delim("FeatureTable.txt",colClasses = "character")
-just_lps_products<-merge(x=just_lps_products,y=feature_table[,c("Genome","RefSeq.Locus.Tag")],by.x="tracking_id",by.y="RefSeq.Locus.Tag",all.x=T,all.y=F)
-just_lps_products[54,]$Genome<-"Unknown"
-write.csv(just_lps_products,"just_lps_products_source_pivot.csv",row.names = F)
-
-melted <- melt(just_lps_products)
-jlp_recast <- dcast(melted,melted$product_name + melted$variable ~ melted$Genome,sum)
-write.csv(jlp_recast,"jlp_recast.csv",row.names = F)
-#[which(just_lps_products$product_name=="3-deoxy-d-manno-octulosonic-acid transferase"
-
-jlp_wide <- reshape(just_lps_products[c("Genome","product_name","S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum")],
-                v.names = c("S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum"),
-                timevar = "Genome",
-                idvar = "product_name",
-                direction = "wide")
-write.csv(jlp_wide,"jlp_wide.csv")
+# x=paste(just_lps_products$tracking_id,sep=",",collapse=",")
+# #copied and pasted x into macvim then %s/,/,\n/g it
+# #then copied and pasted that into patric feature finder
+# #at https://www.patricbrc.org/portal/portal/patric/GenomicFeature?cType=taxon&cId=131567&dm=
+# #and downloaded the results as "FeatureTable.txt"
+# feature_table = read.delim("FeatureTable.txt",colClasses = "character")
+# just_lps_products<-merge(x=just_lps_products,y=feature_table[,c("Genome","RefSeq.Locus.Tag")],by.x="tracking_id",by.y="RefSeq.Locus.Tag",all.x=T,all.y=F)
+# just_lps_products[54,]$Genome<-"Unknown"
+# write.csv(just_lps_products,"just_lps_products_source_pivot.csv",row.names = F)
+#
+# melted <- melt(just_lps_products)
+# jlp_recast <- dcast(melted,melted$product_name + melted$variable ~ melted$Genome,sum)
+# write.csv(jlp_recast,"jlp_recast.csv",row.names = F)
+# #[which(just_lps_products$product_name=="3-deoxy-d-manno-octulosonic-acid transferase"
+#
+# jlp_wide <- reshape(just_lps_products[c("Genome","product_name","S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum")],
+#                 v.names = c("S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum"),
+#                 timevar = "Genome",
+#                 idvar = "product_name",
+#                 direction = "wide")
+# write.csv(jlp_wide,"jlp_wide.csv")
 
 #this is confusing
 #i actually want a clustered, stacked bar chart
@@ -75,7 +75,12 @@ jlp<-read.csv("just_lps_products_source_pivot.csv")
 jlp<-jlp[,c(2:6,8,9)]
 
 #just lpxC and lpxD
-#jlp<-read.csv("for first graph.csv")
+jlp<-read.csv("for first graph.csv")
+melted<-melt(jlp)
+colnames(melted)<-c("product_name","gene","genome","sample","count")
+melted$sample<-gsub("_FPM","",melted$sample)
+melted <- with(melted, melted[order(product_name, genome, sample),])
+ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) #+ guides(fill=FALSE)
 
 #just kdtA and waaL
 jlp<-read.csv("for second graph.csv")
@@ -83,7 +88,8 @@ melted<-melt(jlp)
 colnames(melted)<-c("product_name","gene","genome","sample","count")
 melted$sample<-gsub("_FPM","",melted$sample)
 melted <- with(melted, melted[order(product_name, genome, sample),])
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) #+ guides(fill=FALSE)
+plot.bar = ggplot(data=melted, aes(x=sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) #+ guides(fill=FALSE)
 
 #Let's try polyamines now####
 #Got all.PATRIC.cds.tab from the server and cut down to just genome names and refseq locus tags
