@@ -5,6 +5,7 @@
 library(RColorBrewer)
 library(reshape2)
 library(tidyr)
+library(dplyr)
 
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
@@ -37,19 +38,20 @@ lps_annot$product <- tolower(lps_annot$product)
 just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 
 # mouse expression setup ####
-tlr4 <- read.delim("tlr4-pcr-data.tab")
 order<-c('s+h-','s-h-','s+h+','s-h+')
-tlr4$Series <- factor(tlr4$Series,order)
+
+tlr4 <- read.delim("tlr4-pcr-data.tab")
+tlr4 <- tlr4 %>% mutate(Series =  factor(Series, levels = order)) %>% arrange(Series)
 nfkb <- read.delim("nfkb-pcr-data.tab")
-nfkb$Series <- factor(nfkb$Series,order)
+nfkb <- nfkb %>% mutate(Series =  factor(Series, levels = order)) %>% arrange(Series)
 tlr2 <- read.delim("tlr2-pcr-data.tab")
-tlr2$Series <- factor(tlr2$Series,order)
+tlr2 <- tlr2 %>% mutate(Series =  factor(Series, levels = order)) %>% arrange(Series)
 #another inflammatory pathway gene in mice
 irak4 <- read.delim("irak4-pcr-data.tab")
-irak4$Series <- factor(irak4$Series,order)
+irak4 <- irak4 %>% mutate(Series =  factor(Series, levels = order)) %>% arrange(Series)
 #and another
 cd14 <- read.delim("CD14-pcr-data.tab")
-cd14$Series <- factor(cd14$Series,order)
+cd14 <- cd14 %>% mutate(Series =  factor(Series, levels = order)) %>% arrange(Series)
 
 boxplot(tlr4$Values~tlr4$Series) -> tlr4box
 boxplot(tlr2$Values~tlr2$Series) -> tlr2box
