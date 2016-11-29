@@ -3,6 +3,7 @@ setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 library(RColorBrewer)
 library(reshape2)
 library(ggplot2)
+library(dplyr)
 
 #probably don't need these yet
 #library(KEGGgraph)
@@ -71,25 +72,31 @@ just_lps_genes<-merge(x=filtered_annotated,y=lps_genes,by="gene",all=F)
 #then each stack will be delineated by Genome
 
 #trying again####
-jlp<-read.csv("just_lps_products_source_pivot.csv")
-jlp<-jlp[,c(2:6,8,9)]
+#jlp<-read.csv("just_lps_products_source_pivot.csv")
+#jlp<-jlp[,c(2:6,8,9)]
 
 #just lpxC and lpxD
 jlp<-read.csv("for first graph.csv")
+colnames(jlp)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
 melted<-melt(jlp)
-colnames(melted)<-c("product_name","gene","genome","sample","count")
-melted$sample<-gsub("_FPM","",melted$sample)
-melted <- with(melted, melted[order(product_name, genome, sample),])
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~gene) #+ guides(fill=FALSE)
+order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
+colnames(melted)<-c("product_name","gene","genome","Sample","count")
+melted <- with(melted, melted[order(product_name, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
 
 #just kdtA and waaL
 jlp<-read.csv("for second graph.csv")
+colnames(jlp)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
 melted<-melt(jlp)
-colnames(melted)<-c("product_name","gene","genome","sample","count")
-melted$sample<-gsub("_FPM","",melted$sample)
-melted <- with(melted, melted[order(product_name, genome, sample),])
-plot.bar = ggplot(data=melted, aes(x=sample, y=count, fill=genome))
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) #+ guides(fill=FALSE)
+order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
+colnames(melted)<-c("product_name","gene","genome","Sample","count")
+melted <- with(melted, melted[order(product_name, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
 
 #Let's try polyamines now####
 #Got all.PATRIC.cds.tab from the server and cut down to just genome names and refseq locus tags
@@ -115,12 +122,18 @@ attach(just_poly_products_annot)
 important<-just_poly_products_annot[ecnumber %in% c("[EC:3.5.1.53]","[EC:4.1.1.96]"),]
 important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
 important <- merge(x=important2[,c(1,3,5:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
+colnames(important)[4:7]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
 melted<-melt(important[,2:8])
-colnames(melted)<-c("product_name","gene","genome","sample","count")
-melted$sample<-gsub("_FPM","",melted$sample)
-melted <- with(melted, melted[order(product_name, genome, sample),])
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) #+ guides(fill=FALSE)
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) + guides(fill=FALSE)
+order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
+order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
+colnames(melted)<-c("product_name","gene","genome","Sample","count")
+
+melted <- with(melted, melted[order(product_name, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 detach(just_poly_products_annot)
 
 #And now for butanoate####
@@ -138,9 +151,11 @@ attach(just_butanoate_products_annot)
 important<-just_butanoate_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
 important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
 important <- merge(x=important2[,c(1,3,5:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
+colnames(important)[4:7]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
 melted<-melt(important[,2:8])
-colnames(melted)<-c("product_name","gene","genome","sample","count")
-melted$sample<-gsub("_FPM","",melted$sample)
-melted <- with(melted, melted[order(product_name, genome, sample),])
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) #+ guides(fill=FALSE)
-ggplot(data=melted, aes(x=sample, y=count, fill=genome)) + geom_bar(stat="identity") + facet_grid(~product_name) + guides(fill=FALSE)
+colnames(melted)<-c("product_name","gene","genome","Sample","count")
+
+melted <- with(melted, melted[order(product_name, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
