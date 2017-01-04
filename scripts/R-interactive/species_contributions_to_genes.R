@@ -4,6 +4,7 @@ library(RColorBrewer)
 library(reshape2)
 library(ggplot2)
 library(dplyr)
+library(ggiraph)
 
 #probably don't need these yet
 #library(KEGGgraph)
@@ -83,9 +84,13 @@ order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("product_name","gene","genome","Sample","count")
 melted <- with(melted, melted[order(product_name, genome, Sample),])
-plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+
+#Now interactive!!!!
+plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+
+ggiraph(code = print(plot.bar))
+
+plot.bar + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
 
 #just kdtA and waaL
 jlp<-read.csv("for second graph.csv")
@@ -126,8 +131,6 @@ colnames(important)[4:7]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (
 melted<-melt(important[,2:8])
 order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
-melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("product_name","gene","genome","Sample","count")
 
 melted <- with(melted, melted[order(product_name, genome, Sample),])
@@ -153,6 +156,8 @@ important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="
 important <- merge(x=important2[,c(1,3,5:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
 colnames(important)[4:7]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
 melted<-melt(important[,2:8])
+order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("product_name","gene","genome","Sample","count")
 
 melted <- with(melted, melted[order(product_name, genome, Sample),])
