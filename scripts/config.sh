@@ -17,7 +17,7 @@ export GUNZIP="/bin/gunzip"
 #
 # The main checkout
 #
-export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/tophat-bacteria"
+export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/bacteria-bowtie"
 
 # 
 # Sample names
@@ -57,6 +57,14 @@ export ALLrRNAGFF="$BACT_DIR/all/bowtie2_index/all-refseq-rRNA.gff"
 export ALLFASTA="$BACT_DIR/all/bowtie2_index/all.fa"
 #all those patric CDS tabs for the 1944
 export ALLPATRIC_ANNOT="$BACT_DIR/all/patric_annot"
+
+#the combined: the 1944 "best" genomes and the "low alignment score / unknown" that was assembled and then annotated
+export COMB_DIR="$BACT_DIR/combined"
+export COMBFASTA="$COMB_DIR/combined.fa"
+export COMBBT2="$COMB_DIR/genome"
+export COMBGFF="$COMB_DIR/combined.gff"
+export COMBrRNAGFF="$COMB_DIR/rRNA-combined.gff"
+
 #
 # Where we can find the worker scripts
 #
