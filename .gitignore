@@ -7,3 +7,4 @@ example_cuffdiff.sh
 DS_STORE
 .DS_STORE
 sum_by_kegg_pathway*
+.Rhistory

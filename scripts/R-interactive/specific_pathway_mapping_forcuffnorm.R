@@ -124,7 +124,7 @@ just_butanoate_products<-merge(x=sum_by_product_name,y=butanoate_path,by.x="prod
 
 butanoate_annot$product <- tolower(butanoate_annot$product)
 just_butanoate_products_annot <- merge(x=butanoate_annot,y=just_butanoate_products,by="product",all.x=F,all.y=T)
-write.csv(just_butanoate_products_annot,"just_butanoate_products_annot.csv")
+#write.csv(just_butanoate_products_annot,"just_butanoate_products_annot.csv")
 
 just_butanoate_from_excel <- read.delim("for_butanoate_heatmap.txt",header = T)
 

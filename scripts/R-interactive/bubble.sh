@@ -6,7 +6,7 @@
 # requires inkscape obviously
 
 if [[ $# = 0 ]]; then
-    echo "First argument is your .csv file"
+    echo "First argument is your .tab file"
     echo "Second argument is the NAME of you .pdf file you want"
     echo "WITHOUT the extension"
     exit 1
