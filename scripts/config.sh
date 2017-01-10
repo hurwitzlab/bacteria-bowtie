@@ -79,6 +79,7 @@ export MOUSE_OUT="$DATA_DIR/topmouse"
 export BFRAG_OUT="$DATA_DIR/bfrag_out"
 #export ALLBACT_OUT="$DATA_DIR/theusualsuspects"
 export ALLBACT_OUT="$DATA_DIR/allbact_out"
+export COMB_OUT="$DATA_DIR/combined_out"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
 export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"

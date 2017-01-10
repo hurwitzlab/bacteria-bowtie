@@ -1,5 +1,5 @@
 #
-# to map the mouse
+# to map the bacteria
 #
 unset module
 source ./config.sh
@@ -8,7 +8,7 @@ CWD=$(pwd)
 PROG=`basename $0 ".sh"`
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR" "$ALLBACT_OUT"
+init_dir "$STDOUT_DIR" "$COMBINED_OUT"
 
 cd "$FASTQ_DIR"
 
@@ -18,8 +18,8 @@ for i in $SAMPLE_NAMES; do
     export LEFT_FASTQ="$TEMP_DIR/$i-left-fastq"
     export RIGHT_FASTQ="$TEMP_DIR/$i-right-fastq"
     export UNPAIRED="$TEMP_DIR/$i-unpaired-fastq"
-    export BT2="$ALLBT2"
-    export OUT="$ALLBACT_OUT"
+    export BT2="$COMBBT2"
+    export OUT="$COMBINED_OUT"
     #have to do the weird translate and sed stuff
     #because tophat likes everything comma delimited
 
