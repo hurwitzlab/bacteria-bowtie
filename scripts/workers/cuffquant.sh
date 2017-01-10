@@ -33,6 +33,9 @@ elif [ $SAMDIR == $BFRAG_OUT ]; then
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
     export GFF=$ALLGFF
     export rRNAGFF=$ALLrRNAGFF
+elif [ $SAMDIR == $COMB_OUT ]; then
+    export GFF=$COMBGFF
+    export rRNAGFF=$COMBrRNAGFF
 fi
 
 cd $SAMDIR

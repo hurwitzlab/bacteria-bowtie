@@ -31,6 +31,9 @@ elif [ $SAMDIR == $BFRAG_OUT ]; then
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
     export GFF=$ALLGFF
     export rRNAGFF=$ALLrRNAGFF
+elif [ $SAMDIR == $COMB_OUT ]; then
+    export GFF=$COMBGFF
+    export rRNAGFF=$COMBrRNAGFF
 fi
 
 cd $SAMDIR
@@ -48,6 +51,6 @@ else
 fi
 
 time cuffnorm -p 12 --labels S1,S2,S3,S4 \
-    -o cuffnorm-out \
+    -o combined-cuffnorm-out \
     --quiet \
     $GFF $(cat $ALLCXBS)
