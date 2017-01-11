@@ -82,7 +82,7 @@ export ALLBACT_OUT="$DATA_DIR/allbact_out"
 export COMB_OUT="$DATA_DIR/combined_out"
 
 # Where our reads are (Qc'd and sorted into paired and unpaired)
-export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/mouseRNA/data/fastq-sorted"
+export FASTQ_DIR="/rsgrps/bhurwitz/scottdaniel/RNA_qc/data/fastq_out"
 
 # place to put temp stuff like lists of files
 export TEMP_DIR="$PRJ_DIR/tmp"
