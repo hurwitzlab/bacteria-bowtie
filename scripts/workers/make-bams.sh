@@ -28,6 +28,8 @@ elif [ $SAMDIR == $BFRAG_OUT ]; then
     GENOME=$BFRAGFASTA
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
     GENOME=$ALLFASTA
+elif [ $SAMDIR == $COMB_OUT ]; then
+    GENOME=$COMBFASTA
 fi
 
 cd $SAMDIR
