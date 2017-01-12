@@ -8,7 +8,7 @@ CWD=$(pwd)
 PROG=`basename $0 ".sh"`
 STDOUT_DIR="$CWD/out/$PROG"
 
-init_dir "$STDOUT_DIR" "$COMBINED_OUT"
+init_dir "$STDOUT_DIR" "$COMB_OUT"
 
 cd "$FASTQ_DIR"
 
@@ -19,7 +19,7 @@ for i in $SAMPLE_NAMES; do
     export RIGHT_FASTQ="$TEMP_DIR/$i-right-fastq"
     export UNPAIRED="$TEMP_DIR/$i-unpaired-fastq"
     export BT2="$COMBBT2"
-    export OUT="$COMBINED_OUT"
+    export OUT="$COMB_OUT"
 
 #DON'T HAVE TO DO THIS EVERYTIME IF FILES ALREADY THERE
     find . -type f -regextype 'sed' -iregex "\.\/$i.*\.1.fastq" \
