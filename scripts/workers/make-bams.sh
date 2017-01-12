@@ -3,7 +3,8 @@
 #PBS -W group_list=bhurwitz
 #PBS -q standard
 #PBS -l select=1:ncpus=12:mem=72gb
-#PBS -l walltime=3:00:00
+#PBS -l walltime=03:00:00
+#PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
 
