@@ -23,13 +23,13 @@ for i in $SAMPLE_NAMES; do
 
 #DON'T HAVE TO DO THIS EVERYTIME IF FILES ALREADY THERE
     find . -type f -regextype 'sed' -iregex "\.\/$i.*\.1.fastq" \
-         > $LEFT_FASTQ
+         | sort | tr '\n' ',' | sed "s/,$//g" > $LEFT_FASTQ
     
     find . -type f -regextype 'sed' -iregex "\.\/$i.*\.2.fastq"  \
-         > $RIGHT_FASTQ
+         | sort | tr '\n' ',' | sed "s/,$//g" > $RIGHT_FASTQ
     
     find . -type f -regextype 'sed' -iregex "\.\/$i.*nomatch.*" \
-         > $UNPAIRED 
+         | sort | tr '\n' ',' | sed "s/,$//g" > $UNPAIRED 
     
     echo "Mapping $i FASTQs to $BT2"
 
