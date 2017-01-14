@@ -1,8 +1,8 @@
-setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+setwd("/Users/Scott/bacteria-bowtie/scripts/R-interactive")
 
-system(command = "./process-cuffnorm.sh")
+system(command = "./process-combined.sh")
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out")
 
 simple_gene_counts <- read.table("isoforms.FPKM_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
 
