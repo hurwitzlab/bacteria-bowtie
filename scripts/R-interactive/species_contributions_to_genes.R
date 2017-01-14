@@ -1,4 +1,4 @@
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out")
 
 library(RColorBrewer)
 library(reshape2)

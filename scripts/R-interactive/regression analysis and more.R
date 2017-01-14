@@ -7,7 +7,7 @@ library(reshape2)
 library(tidyr)
 library(dplyr)
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out")
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
