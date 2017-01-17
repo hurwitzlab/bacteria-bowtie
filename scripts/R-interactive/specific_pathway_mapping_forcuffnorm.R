@@ -54,18 +54,27 @@ just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
 
 just_poly_from_excel <- read.csv("combined_poly_products_for_kegg_figure.csv",header=T)
 
-row.names(just_poly_from_excel)<-just_poly_from_excel$id_on_kegg
+row.names(just_poly_from_excel)<-just_poly_from_excel$ecnumber
 
-just_poly_from_excel <- data.matrix(just_poly_from_excel[,3:5])
+just_poly_from_excel <- just_poly_from_excel[order(just_poly_from_excel$cancer),]
 
-x=just_poly_from_excel
+x <- data.matrix(just_poly_from_excel[,4:6])
 
 oldPar <- par(no.readonly = T)
 
 myColors=colorRampPalette(c("Blue","Yellow"))
 
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
+row.names(just_poly_from_excel)<-just_poly_from_excel$gene
+
+x <- data.matrix(just_poly_from_excel[,4:6])
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 # and now heatmap for LPS####
 
 lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
@@ -79,31 +88,23 @@ row.names(just_lps_from_excel)<-just_lps_from_excel$ecnumber
 
 just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
 
-just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
-
-x=just_lps_from_excel
+x <- data.matrix(just_lps_from_excel[,4:6])
 
 oldPar <- par(no.readonly = T)
 
 myColors=colorRampPalette(c("Blue","Yellow"))
 
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
-
-just_lps_from_excel <- read.delim("combined_for_lps_heatmap.txt",header = T)
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
 row.names(just_lps_from_excel)<-just_lps_from_excel$gene
 
-just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
-
-just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
-
-x=just_lps_from_excel
+x <- data.matrix(just_lps_from_excel[,4:6])
 
 oldPar <- par(no.readonly = T)
 
 myColors=colorRampPalette(c("Blue","Yellow"))
 
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
 #for Butanoate pathway####
 butanoate_annot=read.table("butanoate_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
@@ -142,15 +143,9 @@ myColors=colorRampPalette(c("Blue","Yellow"))
 
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
-just_butanoate_from_excel <- read.delim("combined_for_butanoate_heatmap.txt",header = T)
-
 row.names(just_butanoate_from_excel)<-just_butanoate_from_excel$gene
 
-just_butanoate_from_excel <- just_butanoate_from_excel[order(just_butanoate_from_excel$Combined),]
-
-just_butanoate_from_excel <- data.matrix(just_butanoate_from_excel[,4:6])
-
-x=just_butanoate_from_excel
+x <- data.matrix(just_butanoate_from_excel[,4:6])
 
 oldPar <- par(no.readonly = T)
 
