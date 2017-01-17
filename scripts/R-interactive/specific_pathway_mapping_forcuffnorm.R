@@ -52,7 +52,7 @@ just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
 #write.csv(just_poly_products_annot,"poly_products_annotated.csv")
 #more diffexp stuff / heatmap####
 
-just_poly_from_excel <- read.csv("poly_products_for_kegg_figure.csv",header=T)
+just_poly_from_excel <- read.csv("combined_poly_products_for_kegg_figure.csv",header=T)
 
 row.names(just_poly_from_excel)<-just_poly_from_excel$id_on_kegg
 
@@ -73,7 +73,7 @@ lps_annot$product <- tolower(lps_annot$product)
 just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 #write.csv(just_lps_products_annot,"just_lps_products_annot.csv")
 
-just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
+just_lps_from_excel <- read.delim("combined_for_lps_heatmap.txt",header = T)
 
 row.names(just_lps_from_excel)<-just_lps_from_excel$ecnumber
 
@@ -89,7 +89,7 @@ myColors=colorRampPalette(c("Blue","Yellow"))
 
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
 
-just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
+just_lps_from_excel <- read.delim("combined_for_lps_heatmap.txt",header = T)
 
 row.names(just_lps_from_excel)<-just_lps_from_excel$gene
 
@@ -126,7 +126,7 @@ butanoate_annot$product <- tolower(butanoate_annot$product)
 just_butanoate_products_annot <- merge(x=butanoate_annot,y=just_butanoate_products,by="product",all.x=F,all.y=T)
 #write.csv(just_butanoate_products_annot,"just_butanoate_products_annot.csv")
 
-just_butanoate_from_excel <- read.delim("for_butanoate_heatmap.txt",header = T)
+just_butanoate_from_excel <- read.delim("combined_for_butanoate_heatmap.txt",header = T)
 
 row.names(just_butanoate_from_excel)<-just_butanoate_from_excel$ecnumber
 
@@ -142,7 +142,7 @@ myColors=colorRampPalette(c("Blue","Yellow"))
 
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
-just_butanoate_from_excel <- read.delim("for_butanoate_heatmap.txt",header = T)
+just_butanoate_from_excel <- read.delim("combined_for_butanoate_heatmap.txt",header = T)
 
 row.names(just_butanoate_from_excel)<-just_butanoate_from_excel$gene
 
