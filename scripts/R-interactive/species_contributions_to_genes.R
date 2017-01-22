@@ -117,7 +117,23 @@ plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = ge
 
 ggiraph(code = print(plot.bar))
 
+detach(just_butanoate_products_annot)
+
 #for LPS pathway####
+
+lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
+lps_path<-data.frame(unique(lps_annot$product))
+lowercase_lps<-data.frame(tolower(lps_path[,1]))
+lps_path<-lowercase_lps
+colnames(lps_path)<-"V1"
+rm(lowercase_lps)
+just_lps_products<-merge(x=sum_by_product_name,y=lps_path,by.x="product",by.y="V1",all=F)
+lps_annot$product <- tolower(lps_annot$product)
+just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
+attach(just_lps_products_annot)
+
+##left off here
+
 lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
 lps_genes<-data.frame(gene=lps_path[34:96,])
 lowercase_lps<-data.frame(tolower(lps_path[,1]))
@@ -129,36 +145,7 @@ lps_products<-data.frame(product=lps_path[1:34,])
 just_lps_products<-merge(x=filtered_annotated,y=lps_products,by.x="product_name",by.y="product",all=F)
 just_lps_genes<-merge(x=filtered_annotated,y=lps_genes,by="gene",all=F)
 
-# x=paste(just_lps_products$tracking_id,sep=",",collapse=",")
-# #copied and pasted x into macvim then %s/,/,\n/g it
-# #then copied and pasted that into patric feature finder
-# #at https://www.patricbrc.org/portal/portal/patric/GenomicFeature?cType=taxon&cId=131567&dm=
-# #and downloaded the results as "FeatureTable.txt"
-# feature_table = read.delim("FeatureTable.txt",colClasses = "character")
-# just_lps_products<-merge(x=just_lps_products,y=feature_table[,c("Genome","RefSeq.Locus.Tag")],by.x="tracking_id",by.y="RefSeq.Locus.Tag",all.x=T,all.y=F)
-# just_lps_products[54,]$Genome<-"Unknown"
-# write.csv(just_lps_products,"just_lps_products_source_pivot.csv",row.names = F)
-#
-# melted <- melt(just_lps_products)
-# jlp_recast <- dcast(melted,melted$product_name + melted$variable ~ melted$Genome,sum)
-# write.csv(jlp_recast,"jlp_recast.csv",row.names = F)
-# #[which(just_lps_products$product_name=="3-deoxy-d-manno-octulosonic-acid transferase"
-#
-# jlp_wide <- reshape(just_lps_products[c("Genome","product_name","S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum")],
-#                 v.names = c("S1_FPM","S2_FPM","S3_FPM","S4_FPM","sum"),
-#                 timevar = "Genome",
-#                 idvar = "product_name",
-#                 direction = "wide")
-# write.csv(jlp_wide,"jlp_wide.csv")
 
-#this is confusing
-#i actually want a clustered, stacked bar chart
-#so each cluster will be defined by product_name and S1,S2,S3,S4
-#then each stack will be delineated by Genome
-
-#trying again####
-#jlp<-read.csv("just_lps_products_source_pivot.csv")
-#jlp<-jlp[,c(2:6,8,9)]
 
 #just lpxC and lpxD
 jlp<-read.csv("for first graph.csv")
