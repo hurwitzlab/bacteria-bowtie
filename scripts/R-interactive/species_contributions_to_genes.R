@@ -48,19 +48,26 @@ poly_annot$product <- tolower(poly_annot$product)
 just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
 attach(just_poly_products_annot)
 
-important<-just_poly_products_annot[ecnumber %in% c("[EC:3.5.1.53]","[EC:4.1.1.96]"),]
+#important<-just_poly_products_annot[ecnumber %in% c("[EC:3.5.1.53]","[EC:4.1.1.96]"),]
+#doing those three that are in a row before putrescine
+important<-just_poly_products_annot[ecnumber %in% c("[EC:4.1.1.19]","[EC:3.5.3.12]","[EC:3.5.1.53]"),]
+
 
 #important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
 #need to do this with grep because names aren't exact
-one<-filtered_annotated[grep('carboxynorspermidine decarboxylase',filtered_annotated$product_name,perl=T),]
-two<-filtered_annotated[grep('n-carbamoylputrescine amidase',filtered_annotated$product_name,perl=T),]
-three<-rbind(one,two)
-important <- merge(x=three[,c(1:5,6,7)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
+two<-filtered_annotated[grep('agmatine deiminase',filtered_annotated$product_name,perl=T),]
+three<-filtered_annotated[grep('n-carbamoylputrescine amidase',filtered_annotated$product_name,perl=T),]
+one<-filtered_annotated[grep('arginine decarboxylase',filtered_annotated$product_name,perl=T),]
+four<-rbind(one,two,three)
+important <- merge(x=four[,c(1:5,6,7)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
 important$genome_name <- lapply(important$genome_name, as.character)
 important[is.na(important)]<-"unknown"
 
 colnames(important)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
-important$product_name<-gsub('.*carboxynorspermidine decarboxylase.*','carboxynorspermidine decarboxylase',important$product_name,perl = T)
+
+#cut out all the unnecessary stuff so they group appropriately
+important$product_name<-gsub('.*arginine decarboxylase.*','arginine decarboxylase',important$product_name,perl = T)
+important$product_name<-gsub('.*agmatine deiminase.*','agmatine deiminase',important$product_name,perl = T)
 important$product_name<-gsub('.*n-carbamoylputrescine amidase.*','n-carbamoylputrescine amidase',important$product_name,perl = T)
 
 important$genome_name<-as.character(important$genome_name)
