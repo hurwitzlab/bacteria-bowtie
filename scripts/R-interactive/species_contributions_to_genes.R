@@ -80,6 +80,11 @@ melted <- with(melted, melted[order(product_name, genome, Sample),])
 plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
 plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
 plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+
+#interactive
+plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+
+ggiraph(code = print(plot.bar))
 detach(just_poly_products_annot)
 
 #And now for butanoate####
@@ -139,44 +144,38 @@ lps_annot$product <- tolower(lps_annot$product)
 just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 attach(just_lps_products_annot)
 
-##left off here
+#important<-just_lps_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
+#important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
+#need to do this with grep because names aren't exact
 
-lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
-lps_genes<-data.frame(gene=lps_path[34:96,])
-lowercase_lps<-data.frame(tolower(lps_path[,1]))
-lps_path<-lowercase_lps
-colnames(lps_path)<-"V1"
-rm(lowercase_lps)
-lps_products<-data.frame(product=lps_path[1:34,])
+#lpxC
+one<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase',filtered_annotated$product_name,perl=T),]
 
-just_lps_products<-merge(x=filtered_annotated,y=lps_products,by.x="product_name",by.y="product",all=F)
-just_lps_genes<-merge(x=filtered_annotated,y=lps_genes,by="gene",all=F)
+#lpxD
+two<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase',filtered_annotated$product_name,perl=T),]
+three<-rbind(one,two)
+
+important <- merge(x=three[,c(1:5,6,7)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
+important$genome_name <- lapply(important$genome_name, as.character)
+important[is.na(important)]<-"unknown"
 
 
+colnames(important)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+important$product_name<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase.*','UdpOH-Glu-N-Acyl',important$product_name,perl = T)
+important$product_name<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase.*','UdpOH-N-Acetyl-DeAc',important$product_name,perl = T)
 
-#just lpxC and lpxD
-jlp<-read.csv("for first graph.csv")
-colnames(jlp)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
-melted<-melt(jlp)
+important$genome_name<-as.character(important$genome_name)
+melted<-melt(important[,c(2:5,7,8)])
 order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
-colnames(melted)<-c("product_name","gene","genome","Sample","count")
-melted <- with(melted, melted[order(product_name, genome, Sample),])
+colnames(melted)<-c("product_name","genome","Sample","count")
 
-#Now interactive!!!!
-plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+melted <- with(melted, melted[order(product_name, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+
+plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 
 ggiraph(code = print(plot.bar))
 
-plot.bar + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
-
-#just kdtA and waaL
-jlp<-read.csv("for second graph.csv")
-colnames(jlp)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
-melted<-melt(jlp)
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
-melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
-colnames(melted)<-c("product_name","gene","genome","Sample","count")
-melted <- with(melted, melted[order(product_name, genome, Sample),])
-plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~gene) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
