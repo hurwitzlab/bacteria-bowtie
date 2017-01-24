@@ -7,7 +7,7 @@ library(reshape2)
 library(tidyr)
 library(dplyr)
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out")
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
@@ -99,7 +99,7 @@ just_lps_products[just_lps_products==0]<-NA
 lpsProductsNoZeroes = na.omit(just_lps_products)
 row.names(lpsProductsNoZeroes) = lpsProductsNoZeroes[,'product']
 lpsProductsNoZeroes = lpsProductsNoZeroes[,c('s+h-','s-h-','s+h+','s-h+')]
-row.names(lpsProductsNoZeroes) = c("waaL/rfaL","lpxD","lpxC")
+row.names(lpsProductsNoZeroes) = c("kdtA, waaA","waaL/rfaL","lpxD","lpxC")
 
 i=1
 for (i in i:(length(medians_pcr[,1]))) {
@@ -112,26 +112,46 @@ for (i in i:(length(medians_pcr[,1]))) {
   }
 }
 
-#correlation plots####
-#lpxD and tlr4
-plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
-model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr4",]))
-abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
+#Interesting, in this new set
+#TLR2 correlates with kdtA/waaA and lpxD
+#While TLR4 correlates with lpxD and lpxC
+#Have no idea if this really means anything
+#They all are close to significance
 
-#lpxC and tlr4
-plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
-model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr4",]))
+#correlation plots####
+#in order of p-value results
+
+#kdtA/waaA and tlr2
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["kdtA, waaA",]),xlab="Relative expression of TLR2",ylab="Relative expression of kdtA/waaA",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.01726")
+model<-lm(unlist(lpsProductsNoZeroes["kdtA, waaA",]) ~ unlist(medians_pcr["tlr2",]))
 abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
 #lpxD and tlr2
-plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.026")
 
 model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr2",]))
 abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
 
 #lpxC and tlr2
-plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black")
+plot(unlist(medians_pcr["tlr2",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR2",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.06263")
 
 model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr2",]))
 abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
+
+#kdtA/waaA and tlr4
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["kdtA, waaA",]),xlab="Relative expression of TLR4",ylab="Relative expression of kdtA/waaA",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.06248")
+
+model<-lm(unlist(lpsProductsNoZeroes["kdtA, waaA",]) ~ unlist(medians_pcr["tlr4",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
+
+#lpxD and tlr4
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxD",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxD",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.004623")
+model<-lm(unlist(lpsProductsNoZeroes["lpxD",]) ~ unlist(medians_pcr["tlr4",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
+
+#lpxC and tlr4
+plot(unlist(medians_pcr["tlr4",]),unlist(lpsProductsNoZeroes["lpxC",]),xlab="Relative expression of TLR4",ylab="Relative expression of lpxC",cex.axis=1.5,cex.lab=1.5,pch=21,col="black",bg="black",main="p-value=0.03969")
+model<-lm(unlist(lpsProductsNoZeroes["lpxC",]) ~ unlist(medians_pcr["tlr4",]))
+abline(model$coefficients[[1]],model$coefficients[[2]],col="blue",lwd=2)
+
 
