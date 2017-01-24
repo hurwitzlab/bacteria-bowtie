@@ -52,8 +52,8 @@ export BFRAGFASTA="$BACT_DIR/bfrag/genome.fa"
 #all 1944 best strains 
 export ALLBT2="$BACT_DIR/all/bowtie2_index/genome"
 #export ALLGFF="$BACT_DIR/all/bowtie2_index/all.gff"
-export ALLGFF="$BACT_DIR/all/bowtie2_index/all-refseq-CDS.gff"
-export ALLrRNAGFF="$BACT_DIR/all/bowtie2_index/all-refseq-rRNA.gff"
+export ALLGFF="$BACT_DIR/all/bowtie2_index/all-PATRIC-CDS.gff"
+export ALLrRNAGFF="$BACT_DIR/all/bowtie2_index/all-PATRIC-rRNA.gff"
 export ALLFASTA="$BACT_DIR/all/bowtie2_index/all.fa"
 #all those patric CDS tabs for the 1944
 export ALLPATRIC_ANNOT="$BACT_DIR/all/patric_annot"
@@ -62,7 +62,9 @@ export ALLPATRIC_ANNOT="$BACT_DIR/all/patric_annot"
 export COMB_DIR="$BACT_DIR/combined"
 export COMBFASTA="$COMB_DIR/combined.fa"
 export COMBBT2="$COMB_DIR/genome"
+#combined GFF is all-PATRIC-CDS.gff and contigs-longer-than-1000.gff
 export COMBGFF="$COMB_DIR/combined.gff"
+#combined rRNA GFF is all-PATRIC-rRNA.gff and contigs-longer-than-1000-rRNA.gff
 export COMBrRNAGFF="$COMB_DIR/rRNA-combined.gff"
 
 #
