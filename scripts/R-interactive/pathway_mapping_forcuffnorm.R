@@ -37,6 +37,7 @@ sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 # and just get lines where pathways are actually known
 # grep "\S\t\S" refseq_tag_to_pathway.tab > temp.tab
 # mv temp.tab refseq_tag_to_pathway.tab
+
 # Above was for the 1944 set (1944 genomes, not from the year 1944)
 # For the combined we have to match product name to pathway colums
 # (Already done) cut -f 15,21 all.PATRIC.cds.tab > product_to_pathway.tab
