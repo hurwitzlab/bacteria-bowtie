@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 #PBS -W group_list=bhurwitz
-#PBS -q qualified
-#PBS -l select=1:ncpus=12:mem=72gb
+#PBS -q standard
+#PBS -l select=1:ncpus=12:mem=144gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
 #PBS -l cput=36:00:00
