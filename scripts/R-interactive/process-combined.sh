@@ -10,6 +10,8 @@ fi
 echo "Making id_to_product.tab [description]"
 sleep 1
 
+sed -ibak s/Name=/product=/g $RWORK_DIR/combined.gff
+
 perl -nle '($id)=/ID=([^;]*)/; ($prod)=/product=([^;]*)/; print "$id\t$prod"' \
     $RWORK_DIR/combined.gff > $RWORK_DIR/id_to_product.tab
 
