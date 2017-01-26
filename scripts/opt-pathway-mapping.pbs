@@ -2,55 +2,35 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q standard
-#PBS -l select=1:ncpus=12:mem=144gb
+#PBS -l select=1:ncpus=24:mem=144gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
 #PBS -l cput=36:00:00
 #PBS -M scottdaniel@email.arizona.edu
 #PBS -m bea
 
+module load R
+
+set -u
+
 if [ -n "$PBS_O_WORKDIR" ]; then
     cd $PBS_O_WORKDIR
 fi
 
-set -u
+CONFIG="./config.sh"
 
-COMMON="$WORKER_DIR/common.sh"
-
-if [ -e $COMMON ]; then
-  . "$COMMON"
+if [ -e $CONFIG ]; then
+  . "$CONFIG"
 else
-  echo Missing common \"$COMMON\"
+  echo Missing common \"$CONFIG\"
   exit 1
 fi
 
-if [ $SAMDIR == $MOUSE_OUT ]; then
-    GFF=$MOUSEGFF
-elif [ $SAMDIR == $BFRAG_OUT ]; then
-    GFF=$BFRAGGFF
-elif [ $SAMDIR == $ALLBACT_OUT ]; then
-    export GFF=$ALLGFF
-    export rRNAGFF=$ALLrRNAGFF
-elif [ $SAMDIR == $COMB_OUT ]; then
-    export GFF=$COMBGFF
-    export rRNAGFF=$COMBrRNAGFF
-fi
+echo Started $(date)
 
-cd $SAMDIR
+echo Host $(hostname)
 
-echo Running cuffdiff with gff $GFF in $SAMDIR
+cd $COMB_OUT/combined-cuffnorm-out
 
-export ALLCXBS="$SAMDIR/allcxbs"
+Rscript --verbose $SCRIPT_DIR/pathway_mapping_on_HPC.R $(pwd)
 
-find $SAMDIR -iname \*.cxb -print | sort > $ALLCXBS
-
-if [[ ! -d cuffnorm-out ]]; then
-    mkdir -p cuffnorm-out
-else
-    rm -r cuffnorm-out/*
-fi
-
-time cuffnorm -p 12 --labels S1,S2,S3,S4 \
-    -o combined-cuffnorm-out \
-    --quiet \
-    $GFF $(cat $ALLCXBS)
