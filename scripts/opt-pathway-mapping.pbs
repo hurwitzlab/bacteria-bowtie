@@ -2,6 +2,8 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q standard
+#PBS -j oe
+#PBS -o ./out/
 #PBS -l select=1:ncpus=24:mem=144gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
