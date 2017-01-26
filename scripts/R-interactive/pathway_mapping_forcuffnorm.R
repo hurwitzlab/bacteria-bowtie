@@ -44,11 +44,11 @@ sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 # grep -P '\S\t\S' product_to_pathway.tab > temp.tab
 # mv temp.tab product_to_pathway.tab
 
-patric_annotation <- read.delim("product_to_pathway.tab")
-patric_annotation$product <- tolower(patric_annotation$product)
-with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
-#This previous command takes more than an hour!
-#Might want to look into making a sql db of the patric_annotation object?
+#patric_annotation <- read.delim("product_to_pathway.tab")
+#patric_annotation$product <- tolower(patric_annotation$product)
+#with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
+#This took up 144gb of mem on HPC
+#and ended up being a 84gb tab-delimited file!
 
 ####Start here again####
 with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
@@ -68,10 +68,20 @@ colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. 
 setwd("~/bacteria-bowtie/scripts/R-interactive/")
 write.table(shortened,"combined_sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
 
+shortened<-read.table("combined_sum_by_kegg_pathway_above_mean.tab",header = T)
+more_shortened<-shortened[1:30,]
+colnames(more_shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
+write.table(more_shortened,"combined_sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+
 #Have to run this in an external shell cuz ... perl... grumble
 #system("./bubble.sh combined_sum_by_kegg_pathway_above_mean.tab CombinedBubble")
 
 system("cp CombinedBubble.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+
+more_shortened$combined_effect<-log(more_shortened$`S-H+ (Combined)`/more_shortened$`S+H- (Control)`)
+more_shortened<-more_shortened[order(more_shortened$combined_effect , decreasing = T),]
 
 #top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
 #top_sixty_five<-top_sixty_five[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
