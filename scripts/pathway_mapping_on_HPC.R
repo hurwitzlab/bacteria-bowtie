@@ -1,13 +1,12 @@
-#DONE
-#these commands make id_to_gene, id_to_product and id_to_ec_number
-#setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
-#system(command = "./cuffnorm-pathways.sh")
-#DONE
+#This should be run using Rscript and takes a command-line
+#argument of a directory
 
 library(reshape2)
 library(tidyr)
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out/")
+args <- commandArgs(trailingOnly = TRUE)
+
+setwd(paste(args[1]))
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
@@ -51,8 +50,14 @@ with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name
 #Might want to look into making a sql db of the patric_annotation object?
 
 ####Start here again####
+
+#get rid of blanks
 with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
+
+#separate into individual pathways
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
+
+#add 'em up (this obviously causes over-estimation of true expression so it's all relative)
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
 sum_by_kegg_pathway$sum<-rowSums(sum_by_kegg_pathway[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
@@ -65,13 +70,18 @@ shortened<-shortened[order(shortened$sum , decreasing = T),]
 shortened<-shortened[,c("Name","S3_FPM","S4_FPM","S1_FPM","S2_FPM")]
 colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 
-setwd("~/bacteria-bowtie/scripts/R-interactive/")
 write.table(shortened,"combined_sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+
+#save the "with_pathways" so we don't have to go through this again
+write.table(with_pathways,"product_to_pathways_for_combined_set.tab",sep = "\t", quote = T,row.names = F)
+
+
+#can do the rest interactively i think
 
 #Have to run this in an external shell cuz ... perl... grumble
 #system("./bubble.sh combined_sum_by_kegg_pathway_above_mean.tab CombinedBubble")
 
-system("cp CombinedBubble.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+#system("cp CombinedBubble.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
 
 #top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
 #top_sixty_five<-top_sixty_five[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
