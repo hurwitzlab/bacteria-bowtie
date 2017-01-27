@@ -18,7 +18,10 @@ more_shortened$Hhep_effect<-log(more_shortened$`S+H+ (H. hepaticus only)`/more_s
 more_shortened$smad_effect<-log(more_shortened$`S-H- (SMAD3 Knockout)`/more_shortened$`S+H- (Control)`)
 more_shortened<-more_shortened[order(more_shortened$combined_effect , decreasing = T),]
 
-effects <- data.matrix(more_shortened[,6:8])
+#tom's request
+more_shortened$control_effect<-0
+
+effects <- data.matrix(more_shortened[,6:9])
 
 row.names(effects)<-more_shortened$Name
 
@@ -29,7 +32,7 @@ oldPar <- par(no.readonly = T)
 myColors=colorRampPalette(c("Blue","Yellow"))
 
 #a heatmap, cuz why not!
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO","Nothing"))
 
 new_bubble_source <- more_shortened[,1:5]
 
