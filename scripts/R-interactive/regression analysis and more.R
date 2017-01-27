@@ -23,13 +23,13 @@ sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
 
 #for LPS pathway####
-lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
+lps_path<-read.table("patric_LPS_search_list.txt",sep = "\t",comment.char = "#",quote = "")
 lowercase_lps<-data.frame(tolower(lps_path[,1]))
 lps_path<-lowercase_lps
 colnames(lps_path)<-"V1"
 rm(lowercase_lps)
-lps_genes<-data.frame(gene=lps_path[34:96,])
-lps_products<-data.frame(product=lps_path[1:34,])
+#lps_genes<-data.frame(gene=lps_path[34:96,])
+lps_products<-data.frame(product=lps_path[,])
 
 just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
 just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
@@ -99,7 +99,8 @@ just_lps_products[just_lps_products==0]<-NA
 lpsProductsNoZeroes = na.omit(just_lps_products)
 row.names(lpsProductsNoZeroes) = lpsProductsNoZeroes[,'product']
 lpsProductsNoZeroes = lpsProductsNoZeroes[,c('s+h-','s-h-','s+h+','s-h+')]
-row.names(lpsProductsNoZeroes) = c("kdtA, waaA","waaL/rfaL","lpxD","lpxC")
+
+#row.names(lpsProductsNoZeroes) = c("kdtA, waaA","waaL/rfaL","lpxD","lpxC")
 
 i=1
 for (i in i:(length(medians_pcr[,1]))) {
