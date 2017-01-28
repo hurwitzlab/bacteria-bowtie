@@ -15,6 +15,9 @@ annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "",as.i
 lowercase_annotation<-data.frame((annotation[,1]),tolower(annotation[,2]))
 annotation<-lowercase_annotation
 colnames(annotation)<-c("tracking_id","product_name")
+#because parantheses suck and %2c too (,)
+gsub('\"','',annotation$product_name)->annotation$product_name
+gsub('%2c',',',annotation$product_name)->annotation$product_name
 
 gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
 colnames(gene_annotation)<-c("tracking_id","gene")

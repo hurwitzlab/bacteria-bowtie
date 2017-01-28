@@ -21,6 +21,8 @@ colnames(sum_by_gene_name)<-c("gene","s+h+","s-h+","s+h-","s-h-")
 sum_by_gene_name<-sum_by_gene_name[,1:5]
 sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
+wtf<-filtered_annotated[grep("\"",filtered_annotated$product_name),]
+#fracking parantheses, inconsistent annotation
 
 #for LPS pathway####
 lps_path<-read.table("patric_LPS_search_list.txt",sep = "\t",comment.char = "#",quote = "")
