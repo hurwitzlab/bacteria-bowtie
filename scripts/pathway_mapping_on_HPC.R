@@ -45,9 +45,11 @@ sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
 patric_annotation <- read.delim("product_to_pathway.tab")
 patric_annotation$product <- tolower(patric_annotation$product)
+#get rid of quotes and %2c to be consistent
+gsub('\"','',patric_annotation$product)->patric_annotation$product
+gsub('%2c',',',patric_annotation$product)->patric_annotation$product
 with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
-#This previous command takes more than an hour!
-#Might want to look into making a sql db of the patric_annotation object?
+
 
 ####Start here again####
 
@@ -56,6 +58,16 @@ with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
 
 #separate into individual pathways
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
+
+#and lets get our lps, polyamine and butyrate right now
+all_lps<-with_pathways[grep(".*lipopolysaccharide biosynthesis.*",with_pathways$pathway,perl = T,ignore.case = T),]
+write.table(all_lps,"all_lps_products.tab",sep = "\t", quote = T,row.names = F)
+
+all_butyrate<-with_pathways[grep(".*Butanoate metabolism.*",with_pathways$pathway,perl = T,ignore.case = T),]
+write.table(all_butyrate,"all_butyrate_products.tab",sep = "\t", quote = T,row.names = F)
+
+all_polyamine<-with_pathways[grep(".*Arginine and proline metabolism.*",with_pathways$pathway,perl = T,ignore.case = T),]
+write.table(all_polyamine,"all_polyamin_products.tab",sep = "\t", quote = T,row.names = F)
 
 #add 'em up (this obviously causes over-estimation of true expression so it's all relative)
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
