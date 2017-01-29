@@ -4,7 +4,7 @@
 #PBS -q standard
 #PBS -j oe
 #PBS -o ./out/
-#PBS -l select=1:ncpus=24:mem=254gb
+#PBS -l select=1:ncpus=48:mem=288gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
 #PBS -l cput=36:00:00
