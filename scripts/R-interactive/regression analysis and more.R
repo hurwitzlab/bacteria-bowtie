@@ -7,37 +7,44 @@ library(reshape2)
 library(tidyr)
 library(dplyr)
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out")
+setwd("/Users/Scott/combined-cuffnorm-out")
 
 #setup####
-filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
-filtered_annotated <- filtered_annotated[,2:9]
-sum_by_product_name <- read.csv("sum_by_product_name.csv")
-colnames(sum_by_product_name)<-c("product","s+h+","s-h+","s+h-","s-h-")
-sum_by_product_name<-sum_by_product_name[,1:5]
-sum_by_product_name$product <- tolower(sum_by_product_name$product)
-sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
-colnames(sum_by_gene_name)<-c("gene","s+h+","s-h+","s+h-","s-h-")
-sum_by_gene_name<-sum_by_gene_name[,1:5]
-sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
+# filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
+# filtered_annotated <- filtered_annotated[,2:9]
+# sum_by_product_name <- read.csv("sum_by_product_name.csv")
+# colnames(sum_by_product_name)<-c("product","s+h+","s-h+","s+h-","s-h-")
+# sum_by_product_name<-sum_by_product_name[,1:5]
+# sum_by_product_name$product <- tolower(sum_by_product_name$product)
+# sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
+# colnames(sum_by_gene_name)<-c("gene","s+h+","s-h+","s+h-","s-h-")
+# sum_by_gene_name<-sum_by_gene_name[,1:5]
+# sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
-wtf<-filtered_annotated[grep("\"",filtered_annotated$product_name),]
-#fracking parantheses, inconsistent annotation
+#lucky for us, we now have the full LPS pathway already parsed out via the "pathway_mapping_for_combined.R"
+lps<-read.table("all_lps_products.tab",header=T)
+lps_nodup<-lps[!duplicated(lps),]
+rm(lps)
+# lpxC=lps_nodup[grep('.*3.5.1.108.*',lps_nodup$product_name,perl=T),]
+# lpxC$gene='lpxC'
+sum_by_product_name<-rowsum(lps_nodup[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = lps_nodup$product_name)
+
 
 #for LPS pathway####
-lps_path<-read.table("patric_LPS_search_list.txt",sep = "\t",comment.char = "#",quote = "")
-lowercase_lps<-data.frame(tolower(lps_path[,1]))
-lps_path<-lowercase_lps
-colnames(lps_path)<-"V1"
-rm(lowercase_lps)
+# lps_path<-as.character(lps_nodup$product_name[!duplicated(lps_nodup)])
+# lowercase_lps<-data.frame(tolower(lps_path[,1]))
+# lps_path<-lowercase_lps
+# colnames(lps_path)<-"V1"
+# rm(lowercase_lps)
 #lps_genes<-data.frame(gene=lps_path[34:96,])
-lps_products<-data.frame(product=lps_path[,])
+# lps_products<-data.frame(product=lps_path[,])
+#
+# just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
+# just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
+# lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
+# lps_annot$product <- tolower(lps_annot$product)
+# just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 
-just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
-just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
-lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
-lps_annot$product <- tolower(lps_annot$product)
-just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 
 # mouse expression setup ####
 order<-c('s+h-','s-h-','s+h+','s-h+')
@@ -97,10 +104,15 @@ colnames(medians_pcr) = order
 
 #now trying correlation of mouse pcr to bacterial lps gene products
 #first need to remove rows with zeros
-just_lps_products[just_lps_products==0]<-NA
-lpsProductsNoZeroes = na.omit(just_lps_products)
-row.names(lpsProductsNoZeroes) = lpsProductsNoZeroes[,'product']
-lpsProductsNoZeroes = lpsProductsNoZeroes[,c('s+h-','s-h-','s+h+','s-h+')]
+sum_by_product_name[sum_by_product_name==0]<-NA
+lpsProductsNoZeroes = na.omit(sum_by_product_name)
+
+colnames(lpsProductsNoZeroes) =c('s+h-','s-h-','s+h+','s-h+')
+
+lpxC=lpsProductsNoZeroes[grep('.*3.5.1.108.*',row.names(lpsProductsNoZeroes),perl=T),]
+lpxD=lpsProductsNoZeroes[grep('.*2.3.1.191.*',row.names(lpsProductsNoZeroes),perl=T),]
+lpxK=lpsProductsNoZeroes[grep('.*2.7.1.130.*',row.names(lpsProductsNoZeroes),perl=T),]
+kdtA=lpsProductsNoZeroes[grep('.*2.4.99.*',row.names(lpsProductsNoZeroes),perl=T),]
 
 #row.names(lpsProductsNoZeroes) = c("kdtA, waaA","waaL/rfaL","lpxD","lpxC")
 
@@ -111,7 +123,9 @@ for (i in i:(length(medians_pcr[,1]))) {
     temp1 = as.matrix(medians_pcr[i,])
     temp2 = as.matrix(lpsProductsNoZeroes[j,])
     print(paste("Does",row.names(medians_pcr[i,]),"correlate with",row.names(lpsProductsNoZeroes[j,]),"?"))
-    print(cor.test(temp1,temp2))
+    #print(cor.test(temp1,temp2))
+    thing=cor.test(temp1,temp2)
+    print(paste("p-value=",thing$p.value))
   }
 }
 

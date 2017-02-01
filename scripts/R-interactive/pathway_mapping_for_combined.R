@@ -1,15 +1,16 @@
 #To be used after "pathway_mapping_on_HPC.R"
 
-setwd("~/bacteria-bowtie/scripts/R-interactive/")
+setwd("/Users/Scott/combined-cuffnorm-out/")
 
 shortened<-read.table("combined_sum_by_kegg_pathway_above_mean.tab",header = T)
 more_shortened<-shortened[1:30,]
 colnames(more_shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
+
 write.table(more_shortened,"combined_sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
 
-#Have to run this in an external shell cuz ... perl... grumble
-#system("./bubble.sh combined_sum_by_kegg_pathway_above_mean.tab CombinedBubble")
+system("source ~/.bash_profile && ./bubble.sh combined_sum_by_kegg_pathway_above_mean.tab CombinedBubble")
 
 system("cp CombinedBubble.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
 
