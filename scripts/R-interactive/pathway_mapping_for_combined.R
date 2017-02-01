@@ -1,6 +1,6 @@
 #To be used after "pathway_mapping_on_HPC.R"
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/combined-cuffnorm-out/")
+setwd("/Users/Scott/combined-cuffnorm-out/")
 
 shortened<-read.table("combined_sum_by_kegg_pathway_above_mean.tab",header = T)
 more_shortened<-shortened[1:30,]
