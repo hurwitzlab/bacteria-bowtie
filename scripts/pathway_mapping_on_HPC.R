@@ -7,14 +7,60 @@ library(tidyr)
 args <- commandArgs(trailingOnly = TRUE)
 
 setwd(paste(args[1]))
+simple_gene_counts <- read.table("isoforms.FPKM_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
+
+colnames(simple_gene_counts)<-c("tracking_id","S1_FPM","S2_FPM","S3_FPM","S4_FPM")
+
+simple_gene_counts$sum<-rowSums(simple_gene_counts[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
+filtered<-simple_gene_counts[simple_gene_counts$sum!=0,]
+rm(simple_gene_counts)
+
+annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "",as.is = T)
+lowercase_annotation<-data.frame((annotation[,1]),tolower(annotation[,2]))
+annotation<-lowercase_annotation
+rm(lowercase_annotation)
+colnames(annotation)<-c("tracking_id","product_name")
+#because parantheses suck and %2c too (,)
+gsub('\"','',annotation$product_name)->annotation$product_name
+gsub('%2c',',',annotation$product_name)->annotation$product_name
+#trying to remove some of the inconsistent names from products
+#and hypotheticals, probables, predicted
+annotation<-annotation[grep(".*hypothetical protein.*",annotation$product_name,perl=T,invert=T),]
+annotation<-annotation[grep(".*probable.*",annotation$product_name,perl=T,invert=T),]
+annotation<-annotation[grep(".*predicted.*",annotation$product_name,perl=T,invert=T),]
+annotation<-annotation[grep(".*uncharacterized.*",annotation$product_name,perl=T,invert=T),]
+
+annotation<-annotation[grep(".*putative*",annotation$product_name,perl=T,invert=T),]
+
+known_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T,invert=T),]
+unknown_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T),]
+annotation_best_i_can_do <- merge(known_species,unknown_species,by="product_name",all.x=T)
+rm(annotation,known_species,unknown_species)
+
+gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
+colnames(gene_annotation)<-c("tracking_id","gene")
+
+filtered_annotated<-merge(filtered,annotation_best_i_can_do,by="tracking_id")
+filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all.x=T,sort=F)
+filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
+
+sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$product_name)
+sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$gene)
+sum_by_gene_name$gene<-tolower(row.names(sum_by_gene_name))
+sum_by_product_name$product<-row.names(sum_by_product_name)
+
+write.csv(sum_by_product_name,"sum_by_product_name.csv")
+write.csv(sum_by_gene_name,"sum_by_gene_name.csv")
+write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
+rm(sum_by_product_name,sum_by_gene_name)
 
 #setup####
-filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
+#filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
 filtered_annotated <- filtered_annotated[,2:9]
 attach(filtered_annotated)
 
 #don't need no hypothetical proteins
-filtered_annotated <- filtered_annotated[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
+#filtered_annotated <- filtered_annotated[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
 #do not actually use this
 #sum_by_product_name <- read.csv("sum_by_product_name.csv")
 #colnames(sum_by_product_name)[1]<-"product"
@@ -50,7 +96,7 @@ patric_annotation$product <- tolower(patric_annotation$product)
 gsub('\"','',patric_annotation$product)->patric_annotation$product
 gsub('%2c',',',patric_annotation$product)->patric_annotation$product
 with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
-
+rm(patric_annotation,filtered_annotated)
 
 ####Start here again####
 
@@ -59,19 +105,24 @@ with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
 
 #separate into individual pathways
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
+with_pathways_no_dup<-with_pathways[!duplicated(with_pathways),]
+rm(with_pathways)
 
 #and lets get our lps, polyamine and butyrate right now
-all_lps<-with_pathways[grep(".*lipopolysaccharide biosynthesis.*",with_pathways$pathway,perl = T,ignore.case = T),]
+all_lps<-with_pathways_no_dup[grep(".*lipopolysaccharide biosynthesis.*",with_pathways_no_dup$pathway,perl = T,ignore.case = T),]
 write.table(all_lps,"all_lps_products.tab",sep = "\t", quote = T,row.names = F)
+rm(all_lps)
 
-all_butyrate<-with_pathways[grep(".*Butanoate metabolism.*",with_pathways$pathway,perl = T,ignore.case = T),]
+all_butyrate<-with_pathways_no_dup[grep(".*Butanoate metabolism.*",with_pathways_no_dup$pathway,perl = T,ignore.case = T),]
 write.table(all_butyrate,"all_butyrate_products.tab",sep = "\t", quote = T,row.names = F)
+rm(all_butyrate)
 
-all_polyamine<-with_pathways[grep(".*Arginine and proline metabolism.*",with_pathways$pathway,perl = T,ignore.case = T),]
-write.table(all_polyamine,"all_polyamin_products.tab",sep = "\t", quote = T,row.names = F)
+all_polyamine<-with_pathways_no_dup[grep(".*Arginine and proline metabolism.*",with_pathways_no_dup$pathway,perl = T,ignore.case = T),]
+write.table(all_polyamine,"all_polyamine_products.tab",sep = "\t", quote = T,row.names = F)
+rm(all_polyamine)
 
 #add 'em up (this obviously causes over-estimation of true expression so it's all relative)
-sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
+sum_by_kegg_pathway<-rowsum(with_pathways_no_dup[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways_no_dup$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
 sum_by_kegg_pathway$sum<-rowSums(sum_by_kegg_pathway[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
 
@@ -85,8 +136,8 @@ colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. 
 
 write.table(shortened,"combined_sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
 
-#save the "with_pathways" so we don't have to go through this again
-write.table(with_pathways,"product_to_pathways_for_combined_set.tab",sep = "\t", quote = T,row.names = F)
+#save the "with_pathways_no_dup" so we don't have to go through this again
+#write.table(with_pathways_no_dup,"product_to_pathways_for_combined_set.tab",sep = "\t", quote = T,row.names = F)
 
 
 #can do the rest interactively i think
