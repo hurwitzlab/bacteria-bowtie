@@ -15,19 +15,20 @@ attach(filtered_annotated)
 
 #don't need no hypothetical proteins
 filtered_annotated <- filtered_annotated[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
-sum_by_product_name <- read.csv("sum_by_product_name.csv")
-colnames(sum_by_product_name)[1]<-"product"
-attach(sum_by_product_name)
-
+#do not actually use this
+#sum_by_product_name <- read.csv("sum_by_product_name.csv")
+#colnames(sum_by_product_name)[1]<-"product"
+#attach(sum_by_product_name)
+#
 #don't need no hypothetical proteins
-sum_by_product_name <- sum_by_product_name[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
-sum_by_product_name<-sum_by_product_name[,1:5]
-sum_by_product_name$product <- tolower(sum_by_product_name$product)
-sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
-colnames(sum_by_gene_name)[1]<-"gene"
-sum_by_gene_name<-sum_by_gene_name[,1:5]
-sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
-
+#sum_by_product_name <- sum_by_product_name[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
+#sum_by_product_name<-sum_by_product_name[,1:5]
+#sum_by_product_name$product <- tolower(sum_by_product_name$product)
+#sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
+#colnames(sum_by_gene_name)[1]<-"gene"
+#sum_by_gene_name<-sum_by_gene_name[,1:5]
+#sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
+#
 #now we will attempt to add pathways####
 #patric_annotation <- read.delim("all.PATRIC.cds.tab")
 #that took over 5 minutes
