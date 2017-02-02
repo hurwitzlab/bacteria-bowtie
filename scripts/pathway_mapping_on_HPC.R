@@ -7,7 +7,8 @@ library(tidyr)
 args <- commandArgs(trailingOnly = TRUE)
 
 setwd(paste(args[1]))
-simple_gene_counts <- read.table("isoforms.FPKM_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
+
+simple_gene_counts <- read.table("isoforms.fpkm_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
 
 colnames(simple_gene_counts)<-c("tracking_id","S1_FPM","S2_FPM","S3_FPM","S4_FPM")
 
