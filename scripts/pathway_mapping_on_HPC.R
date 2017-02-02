@@ -35,12 +35,14 @@ annotation<-annotation[grep(".*putative*",annotation$product_name,perl=T,invert=
 
 known_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T,invert=T),]
 unknown_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T),]
+print("making annotation_best_i_can_do")
 annotation_best_i_can_do <- merge(known_species,unknown_species,by="product_name",all.x=T)
 rm(annotation,known_species,unknown_species)
 
 gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
 colnames(gene_annotation)<-c("tracking_id","gene")
 
+print("making filtered_annotated")
 filtered_annotated<-merge(filtered,annotation_best_i_can_do,by="tracking_id")
 filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all.x=T,sort=F)
 filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
@@ -96,6 +98,9 @@ patric_annotation$product <- tolower(patric_annotation$product)
 #get rid of quotes and %2c to be consistent
 gsub('\"','',patric_annotation$product)->patric_annotation$product
 gsub('%2c',',',patric_annotation$product)->patric_annotation$product
+print("making with_pathways")
+print(colnames(filtered_annotated))
+print(colnames(patric_annotation))
 with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
 rm(patric_annotation,filtered_annotated)
 
