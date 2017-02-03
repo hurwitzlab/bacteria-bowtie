@@ -60,7 +60,7 @@ just_poly_products<-rowsum(poly_nodup[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],g
 # poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
 # poly_annot$product <- tolower(poly_annot$product)
 # just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
-#write.csv(just_poly_products_annot,"poly_products_annotated.csv")
+# write.csv(just_poly_products_annot,"poly_products_annotated.csv")
 #more diffexp stuff / heatmap####
 
 just_poly_from_excel <- read.csv("combined_poly_products_for_kegg_figure.csv",header=T)
