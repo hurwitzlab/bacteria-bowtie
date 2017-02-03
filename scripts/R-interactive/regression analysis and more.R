@@ -109,10 +109,16 @@ lpsProductsNoZeroes = na.omit(sum_by_product_name)
 
 colnames(lpsProductsNoZeroes) =c('s+h-','s-h-','s+h+','s-h+')
 
-lpxC=lpsProductsNoZeroes[grep('.*3.5.1.108.*',row.names(lpsProductsNoZeroes),perl=T),]
+lpxC=lpsProductsNoZeroes[grep('.*udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine.*',row.names(lpsProductsNoZeroes),perl=T),]
 lpxD=lpsProductsNoZeroes[grep('.*2.3.1.191.*',row.names(lpsProductsNoZeroes),perl=T),]
 lpxK=lpsProductsNoZeroes[grep('.*2.7.1.130.*',row.names(lpsProductsNoZeroes),perl=T),]
 kdtA=lpsProductsNoZeroes[grep('.*2.4.99.*',row.names(lpsProductsNoZeroes),perl=T),]
+favorites=rbind(lpxC,lpxD,lpxK,kdtA)
+row.names(favorites)=c("lpxC","lpxD","lpxK","kdtA")
+barplot(as.matrix(favorites["lpxC",]),main="\"lpxC\"")
+barplot(as.matrix(favorites["lpxD",]),main="\"lpxD\"")
+barplot(as.matrix(favorites["lpxK",]),main="\"lpxK\"")
+barplot(as.matrix(favorites["kdtA",]),main="\"kdtA\"")
 
 #row.names(lpsProductsNoZeroes) = c("kdtA, waaA","waaL/rfaL","lpxD","lpxC")
 
