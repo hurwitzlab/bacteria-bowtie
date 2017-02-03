@@ -7,66 +7,69 @@ library(tidyr)
 args <- commandArgs(trailingOnly = TRUE)
 
 setwd(paste(args[1]))
-
-simple_gene_counts <- read.table("isoforms.fpkm_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
-
-colnames(simple_gene_counts)<-c("tracking_id","S1_FPM","S2_FPM","S3_FPM","S4_FPM")
-
-simple_gene_counts$sum<-rowSums(simple_gene_counts[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
-filtered<-simple_gene_counts[simple_gene_counts$sum!=0,]
-rm(simple_gene_counts)
-
-annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "",as.is = T)
-lowercase_annotation<-data.frame((annotation[,1]),tolower(annotation[,2]))
-annotation<-lowercase_annotation
-rm(lowercase_annotation)
-colnames(annotation)<-c("tracking_id","product_name")
-#because parantheses suck and %2c too (,)
-gsub('\"','',annotation$product_name)->annotation$product_name
-gsub('%2c',',',annotation$product_name)->annotation$product_name
-#trying to remove some of the inconsistent names from products
-#and hypotheticals, probables, predicted
-annotation<-annotation[grep(".*hypothetical protein.*",annotation$product_name,perl=T,invert=T),]
-annotation<-annotation[grep(".*probable.*",annotation$product_name,perl=T,invert=T),]
-annotation<-annotation[grep(".*predicted.*",annotation$product_name,perl=T,invert=T),]
-annotation<-annotation[grep(".*uncharacterized.*",annotation$product_name,perl=T,invert=T),]
-
-annotation<-annotation[grep(".*putative*",annotation$product_name,perl=T,invert=T),]
-
-known_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T,invert=T),]
-unknown_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T),]
-print("making annotation_best_i_can_do")
-
-#this filters out product names that are not consistent with known species
-matrix_of_goodness <- merge(known_species,unknown_species,by="product_name",all.x=T)
-good_unknown <- unknown_species[unknown_species$tracking_id %in% matrix_of_goodness$tracking_id.y,]
-annotation_best_i_can_do<-rbind(good_unknown,known_species)
-
-rm(annotation,known_species,unknown_species,matrix_of_goodness)
-
-gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
-colnames(gene_annotation)<-c("tracking_id","gene")
-
-print("making filtered_annotated")
-print(colnames(filtered))
-print(colnames(annotation_best_i_can_do))
-filtered_annotated<-merge(filtered,annotation_best_i_can_do,by="tracking_id")
-filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all.x=T,sort=F)
-filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
-
-sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$product_name)
-sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$gene)
-sum_by_gene_name$gene<-tolower(row.names(sum_by_gene_name))
-sum_by_product_name$product<-row.names(sum_by_product_name)
-
-#don't need row names as a column
-write.csv(sum_by_product_name,"sum_by_product_name.csv",row.names = F)
-write.csv(sum_by_gene_name,"sum_by_gene_name.csv",row.names = F)
-write.csv(filtered_annotated,"diff_exp_for_all_bact.csv",row.names = F)
-rm(sum_by_product_name,sum_by_gene_name)
+#
+# simple_gene_counts <- read.table("isoforms.fpkm_table",header = T, comment.char = "", strip.white = T, sep = "\t", quote = "", colClasses = c("character","numeric","numeric","numeric","numeric"))
+#
+# colnames(simple_gene_counts)<-c("tracking_id","S1_FPM","S2_FPM","S3_FPM","S4_FPM")
+#
+# simple_gene_counts$sum<-rowSums(simple_gene_counts[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")])
+# filtered<-simple_gene_counts[simple_gene_counts$sum!=0,]
+# rm(simple_gene_counts)
+#
+# annotation<-read.table("id_to_product.tab",header = F,sep = '\t',quote = "",as.is = T)
+# lowercase_annotation<-data.frame((annotation[,1]),tolower(annotation[,2]))
+# annotation<-lowercase_annotation
+# rm(lowercase_annotation)
+# colnames(annotation)<-c("tracking_id","product_name")
+# #because parantheses suck and %2c too (,)
+# gsub('\"','',annotation$product_name)->annotation$product_name
+# gsub('%2c',',',annotation$product_name)->annotation$product_name
+# #trying to remove some of the inconsistent names from products
+# #and hypotheticals, probables, predicted
+# annotation<-annotation[grep(".*hypothetical protein.*",annotation$product_name,perl=T,invert=T),]
+# annotation<-annotation[grep(".*probable.*",annotation$product_name,perl=T,invert=T),]
+# annotation<-annotation[grep(".*predicted.*",annotation$product_name,perl=T,invert=T),]
+# annotation<-annotation[grep(".*uncharacterized.*",annotation$product_name,perl=T,invert=T),]
+#
+# annotation<-annotation[grep(".*putative*",annotation$product_name,perl=T,invert=T),]
+#
+# known_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T,invert=T),]
+# unknown_species<-annotation[grep('^fig\\|6666666.*',annotation$tracking_id,perl=T),]
+# print("making annotation_best_i_can_do")
+#
+# #this filters out product names that are not consistent with known species
+# matrix_of_goodness <- merge(known_species,unknown_species,by="product_name",all.x=T)
+# good_unknown <- unknown_species[unknown_species$tracking_id %in% matrix_of_goodness$tracking_id.y,]
+# annotation_best_i_can_do<-rbind(good_unknown,known_species)
+#
+# write.table()
+#
+# rm(annotation,known_species,unknown_species,matrix_of_goodness)
+#
+# #f$%^ genes
+# #gene_annotation<-read.table("id_to_gene.tab",header = F,sep = '\t',quote = "")
+# #colnames(gene_annotation)<-c("tracking_id","gene")
+#
+# print("making filtered_annotated")
+# #print(colnames(filtered))
+# #print(colnames(annotation_best_i_can_do))
+# filtered_annotated<-merge(filtered,annotation_best_i_can_do,by="tracking_id")
+# filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all.x=T,sort=F)
+# filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
+#
+# sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$product_name)
+# sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$gene)
+# sum_by_gene_name$gene<-tolower(row.names(sum_by_gene_name))
+# sum_by_product_name$product<-row.names(sum_by_product_name)
+#
+# #don't need row names as a column
+# write.csv(sum_by_product_name,"sum_by_product_name.csv",row.names = F)
+# write.csv(sum_by_gene_name,"sum_by_gene_name.csv",row.names = F)
+# write.csv(filtered_annotated,"diff_exp_for_all_bact.csv",row.names = F)
+# rm(sum_by_product_name,sum_by_gene_name)
 
 #setup####
-#filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
+filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
 attach(filtered_annotated)
 
 #don't need no hypothetical proteins
