@@ -59,14 +59,14 @@ sum_by_gene_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FP
 sum_by_gene_name$gene<-tolower(row.names(sum_by_gene_name))
 sum_by_product_name$product<-row.names(sum_by_product_name)
 
-write.csv(sum_by_product_name,"sum_by_product_name.csv")
-write.csv(sum_by_gene_name,"sum_by_gene_name.csv")
-write.csv(filtered_annotated,"diff_exp_for_all_bact.csv")
+#don't need row names as a column
+write.csv(sum_by_product_name,"sum_by_product_name.csv",row.names = F)
+write.csv(sum_by_gene_name,"sum_by_gene_name.csv",row.names = F)
+write.csv(filtered_annotated,"diff_exp_for_all_bact.csv",row.names = F)
 rm(sum_by_product_name,sum_by_gene_name)
 
 #setup####
 #filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
-filtered_annotated <- filtered_annotated[,2:9]
 attach(filtered_annotated)
 
 #don't need no hypothetical proteins
