@@ -23,32 +23,43 @@ sum_by_gene_name<-sum_by_gene_name[,1:5]
 sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
 #for LPS pathway####
-lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
-lowercase_lps<-data.frame(tolower(lps_path[,1]))
-lps_path<-lowercase_lps
-colnames(lps_path)<-"V1"
-rm(lowercase_lps)
-lps_genes<-data.frame(gene=lps_path[34:96,])
-lps_products<-data.frame(product=lps_path[1:34,])
+# lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
+# lowercase_lps<-data.frame(tolower(lps_path[,1]))
+# lps_path<-lowercase_lps
+# colnames(lps_path)<-"V1"
+# rm(lowercase_lps)
+# lps_genes<-data.frame(gene=lps_path[34:96,])
+# lps_products<-data.frame(product=lps_path[1:34,])
+#
+# just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
+# just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
 
-just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
-just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
+lps<-read.table("all_lps_products.tab",header=T)
+lps_nodup<-lps[!duplicated(lps),]
+rm(lps)
+just_lps_products<-rowsum(lps_nodup[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = lps_nodup$product_name)
 
 #for polyamines####
-polyamines<-read.table("polyamine-search-list",sep="\t",comment.char = "#")
-polyamines<-data.frame(tolower(polyamines[,1]))
-colnames(polyamines)<-"V1"
-polyamines<-unique(polyamines)
-poly_product<-data.frame(product=polyamines$V1[1:88])
-poly_genes<-data.frame(gene=polyamines$V1[89:203])
 
-just_poly_products<-merge(x=sum_by_product_name,y=poly_product,all=F)
-just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
+# polyamines<-read.table("polyamine-search-list",sep="\t",comment.char = "#")
+# polyamines<-data.frame(tolower(polyamines[,1]))
+# colnames(polyamines)<-"V1"
+# polyamines<-unique(polyamines)
+# poly_product<-data.frame(product=polyamines$V1[1:88])
+# poly_genes<-data.frame(gene=polyamines$V1[89:203])
+#
+# just_poly_products<-merge(x=sum_by_product_name,y=poly_product,all=F)
+# just_poly_genes<-merge(x=sum_by_gene_name,y=poly_genes,all=F)
+
+polyamines<-read.table("all_polyamin_products.tab",header=T)
+poly_nodup<-polyamines[!duplicated(polyamines),]
+rm(polyamines)
+just_poly_products<-rowsum(poly_nodup[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = poly_nodup$product_name)
 
 #getting more annotation for poly####
-poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
-poly_annot$product <- tolower(poly_annot$product)
-just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
+# poly_annot<-read.table("polyamine_list_annotation",header = T,sep = ";",strip.white = T)
+# poly_annot$product <- tolower(poly_annot$product)
+# just_poly_products_annot <- merge(x=poly_annot,y=just_poly_products)
 #write.csv(just_poly_products_annot,"poly_products_annotated.csv")
 #more diffexp stuff / heatmap####
 
