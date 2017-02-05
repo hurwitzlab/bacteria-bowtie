@@ -31,6 +31,8 @@ elif [ $SAMDIR == $ALLBACT_OUT ]; then
     GENOME=$ALLFASTA
 elif [ $SAMDIR == $COMB_OUT ]; then
     GENOME=$COMBFASTA
+elif [ $SAMDIR == $UNK_OUT ]; then
+    GENOME=$UNKFASTA
 fi
 
 cd $SAMDIR
