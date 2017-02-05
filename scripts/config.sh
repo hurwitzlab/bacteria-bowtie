@@ -67,6 +67,14 @@ export COMBGFF="$COMB_DIR/combined.gff"
 #combined rRNA GFF is all-PATRIC-rRNA.gff and contigs-longer-than-1000-rRNA.gff
 export COMBrRNAGFF="$COMB_DIR/rRNA-combined.gff"
 
+#this is the last damn one i swear
+#just the unknowns now
+export UNK_DIR="$BACT_DIR/unknown"
+export UNKFASTA="$UNK_DIR/unknown.fa"
+export UNKBT2="$UNK_DIR/genome"
+export UNKGFF="$UNK_DIR/unknown.gff"
+export UNKrRNAGFF="$UNK_DIR/rRNA-unknown.gff"
+
 #
 # Where we can find the worker scripts
 #
