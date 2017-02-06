@@ -12,7 +12,7 @@ if [[ $# = 0 ]]; then
     exit 1
 fi
 
-perl ./bubble.pl -l -r -s -o $2.svg $1
+perl ./bubble.pl -r -s -o $2.svg $1
 sleep 1
 inkscape $2.svg --export-pdf=$2.pdf
 sleep 1
