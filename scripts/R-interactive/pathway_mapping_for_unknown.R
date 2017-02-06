@@ -47,14 +47,16 @@ shortened<-sum_by_kegg_pathway[sum_by_kegg_pathway$sum>mean(sum_by_kegg_pathway$
 shortened<-shortened[order(shortened$sum , decreasing = T),]
 shortened<-shortened[,c("Name","S3_FPM","S4_FPM","S1_FPM","S2_FPM")]
 colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
-more_shortened<-shortened[1:30,]
+more_shortened<-shortened[2:31,]
 
 setwd("~/bacteria-bowtie/scripts/R-interactive/")
 write.table(more_shortened,"unknown_sum_by_kegg_pathway.tab", sep = "\t", quote = T,row.names = F)
 
-system("source ~/.bash_profile && ./bubble.sh unknown_sum_by_kegg_pathway.tab unknownBubble")
+system("source ~/.bash_profile && ./bubble.sh unknown_sum_by_kegg_pathway.tab unknownBubble_no_riboflavin")
 
-system("cp unknownBubble.pdf '/Users/Scott/unknown-cuffnorm-out/'")
+system("cp unknownBubble_no_riboflavin.pdf '/Users/Scott/unknown-cuffnorm-out/'")
+
+
 
 more_shortened$combined_effect<-log(more_shortened$`S-H+ (Combined)`/more_shortened$`S+H- (Control)`)
 more_shortened$Hhep_effect<-log(more_shortened$`S+H+ (H. hepaticus only)`/more_shortened$`S+H- (Control)`)
