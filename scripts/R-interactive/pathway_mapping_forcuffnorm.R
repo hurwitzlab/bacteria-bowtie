@@ -73,13 +73,13 @@ heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), c
 
 new_bubble_source <- shortened[,1:5]
 
-setwd("~/bacteria-bowtie/scripts/R-interactive/")
+#setwd("~/bacteria-bowtie/scripts/R-interactive/")
 
-write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
+#write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
 
-system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
+#system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
 
-system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+#system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
 
 #write.table(shortened,"sum_by_kegg_pathway_above_mean_for_known.tab", sep = "\t", quote = T,row.names = F)
 
@@ -93,3 +93,14 @@ system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz
 
 #write.table(top_sixty_five,"~/tophat-bacteria/scripts/R-interactive/sum_by_kegg_pathway_top_sixty_five.tab", sep = "\t", quote = T,row.names = F)
 
+#oxidative phosphorylation####
+
+attach(with_pathways)
+
+oxphos<-with_pathways[pathway=="00190|Oxidative phosphorylation",]
+no_blanks<-oxphos[oxphos$product_name!="",]
+no_hypothetical<-no_blanks[grep("hypothetical",no_blanks$product_name,ignore.case = T,invert = T),]
+oxphos<-no_hypothetical
+rm(no_blanks,no_hypothetical)
+
+oxphos_product_sums<-rowsum(oxphos[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group=oxphos$product_name)
