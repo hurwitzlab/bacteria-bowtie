@@ -34,6 +34,18 @@ with_pathways<-merge(x=filtered_annotated,y=patric_annotation[,c("refseq_locus_t
 with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
 
+#because parantheses suck and %2c too (,)
+gsub('\"','',with_pathways$product_name)->with_pathways$product_name
+gsub('%2c',',',with_pathways$product_name)->with_pathways$product_name
+#trying to remove some of the inconsistent names from products
+#and hypotheticals, probables, predicted
+with_pathways<-with_pathways[grep(".*hypothetical protein.*",with_pathways$product_name,perl=T,invert=T),]
+with_pathways<-with_pathways[grep(".*probable.*",with_pathways$product_name,perl=T,invert=T),]
+with_pathways<-with_pathways[grep(".*predicted.*",with_pathways$product_name,perl=T,invert=T),]
+with_pathways<-with_pathways[grep(".*uncharacterized.*",with_pathways$product_name,perl=T,invert=T),]
+
+with_pathways<-with_pathways[grep(".*putative*",with_pathways$product_name,perl=T,invert=T),]
+
 no_dups<-with_pathways[!duplicated(with_pathways),]
 with_pathways<-no_dups
 rm(no_dups)
@@ -73,25 +85,13 @@ heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), c
 
 new_bubble_source <- shortened[,1:5]
 
-#setwd("~/bacteria-bowtie/scripts/R-interactive/")
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
 
-#write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
+write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
 
-#system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
+system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
 
-#system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
-
-#write.table(shortened,"sum_by_kegg_pathway_above_mean_for_known.tab", sep = "\t", quote = T,row.names = F)
-
-#Have to run this in an external shell cuz ... perl... grumble
-#system("./bubble.sh sum_by_kegg_pathway_above_mean.tab Figure7")
-
-#system("cp Figure7.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
-
-#top_sixty_five<-sum_by_kegg_pathway[order(sum_by_kegg_pathway$sum,decreasing = T)[1:65],]
-#top_sixty_five<-top_sixty_five[,c("Name","S1_FPM","S2_FPM","S3_FPM","S4_FPM")]
-
-#write.table(top_sixty_five,"~/tophat-bacteria/scripts/R-interactive/sum_by_kegg_pathway_top_sixty_five.tab", sep = "\t", quote = T,row.names = F)
+system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
 
 #oxidative phosphorylation####
 
@@ -104,3 +104,4 @@ oxphos<-no_hypothetical
 rm(no_blanks,no_hypothetical)
 
 oxphos_product_sums<-rowsum(oxphos[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group=oxphos$product_name)
+
