@@ -50,9 +50,37 @@ shortened<-shortened[order(shortened$sum , decreasing = T),]
 shortened<-shortened[,c("Name","S3_FPM","S4_FPM","S1_FPM","S2_FPM")]
 colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 
+shortened$combined_effect<-log(shortened$`S-H+ (Combined)`/shortened$`S+H- (Control)`)
+shortened$Hhep_effect<-log(shortened$`S+H+ (H. hepaticus only)`/shortened$`S+H- (Control)`)
+shortened$smad_effect<-log(shortened$`S-H- (SMAD3 Knockout)`/shortened$`S+H- (Control)`)
+shortened<-shortened[order(shortened$combined_effect , decreasing = T),]
 
+#tom's request
+shortened$control_effect<-0
 
-#setwd("~/bacteria-bowtie/scripts/R-interactive/")
+effects <- data.matrix(shortened[,6:9])
+
+row.names(effects)<-shortened$Name
+
+x=effects
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+#a heatmap, cuz why not!
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO","Nothing"))
+
+new_bubble_source <- shortened[,1:5]
+
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
+
+write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
+
+system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
+
+system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+
 #write.table(shortened,"sum_by_kegg_pathway_above_mean_for_known.tab", sep = "\t", quote = T,row.names = F)
 
 #Have to run this in an external shell cuz ... perl... grumble
