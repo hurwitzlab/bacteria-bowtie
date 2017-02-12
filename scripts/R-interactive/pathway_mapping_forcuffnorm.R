@@ -45,8 +45,8 @@ shortened<-shortened[order(shortened$sum , decreasing = T),]
 shortened<-shortened[,c("Name","S3_FPM","S4_FPM","S1_FPM","S2_FPM")]
 colnames(shortened)=c("Name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 
-setwd("~/tophat-bacteria/scripts/R-interactive/")
-write.table(shortened,"sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
+write.table(shortened,"sum_by_kegg_pathway_above_mean_for_known.tab", sep = "\t", quote = T,row.names = F)
 
 #Have to run this in an external shell cuz ... perl... grumble
 #system("./bubble.sh sum_by_kegg_pathway_above_mean.tab Figure7")
