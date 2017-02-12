@@ -1,26 +1,36 @@
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
+library(reshape2)
+library(tidyr)
 library(RColorBrewer)
 
-#probably don't need these yet
-#library(KEGGgraph)
-#library(KEGGREST)
-
-#this might work later if I really wanted to work at it
-#but too much work for now
-#source("/Users/Scott/tophat-bacteria/scripts/R-interactive/uglyMerge.R")
-
 #setup####
-filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
-filtered_annotated <- filtered_annotated[,2:9]
-sum_by_product_name <- read.csv("sum_by_product_name.csv")
-colnames(sum_by_product_name)[1]<-"product"
-sum_by_product_name<-sum_by_product_name[,1:5]
-sum_by_product_name$product <- tolower(sum_by_product_name$product)
-sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
-colnames(sum_by_gene_name)[1]<-"gene"
-sum_by_gene_name<-sum_by_gene_name[,1:5]
-sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
+with_pathways2<-read.table("with_pathways.tab",header=T)
+
+#oxidative phosphorylation####
+
+attach(with_pathways)
+
+oxphos<-with_pathways[pathway=="00190|Oxidative phosphorylation",]
+no_blanks<-oxphos[oxphos$product_name!="",]
+no_hypothetical<-no_blanks[grep("hypothetical",no_blanks$product_name,ignore.case = T,invert = T),]
+oxphos<-no_hypothetical
+rm(no_blanks,no_hypothetical)
+
+oxphos_product_sums<-rowsum(oxphos[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group=oxphos$product_name)
+truthy<-apply(oxphos_product_sums,1,function(row) all(row != 0))
+no_zeros<-oxphos_product_sums[truthy,]
+oxphos_product_sums<-no_zeros
+rm(truthy,no_zeros,x)
+
+colnames(oxphos_product_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+
+oxphos_product_sums$combined_effect<-log(oxphos_product_sums$`S-H+ (Combined)`/oxphos_product_sums$`S+H- (Control)`)
+oxphos_product_sums$Hhep_effect<-log(oxphos_product_sums$`S+H+ (H. hepaticus only)`/oxphos_product_sums$`S+H- (Control)`)
+oxphos_product_sums$smad_effect<-log(oxphos_product_sums$`S-H- (SMAD3 Knockout)`/oxphos_product_sums$`S+H- (Control)`)
+oxphos_product_sums<-oxphos_product_sums[order(oxphos_product_sums$combined_effect , decreasing = T),]
+
+
 
 #for LPS pathway####
 lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")

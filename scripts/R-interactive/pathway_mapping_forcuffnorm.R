@@ -6,6 +6,7 @@
 
 library(reshape2)
 library(tidyr)
+library(RColorBrewer)
 
 setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
 
@@ -49,6 +50,7 @@ with_pathways<-with_pathways[grep(".*putative*",with_pathways$product_name,perl=
 no_dups<-with_pathways[!duplicated(with_pathways),]
 with_pathways<-no_dups
 rm(no_dups)
+write.table(with_pathways,"with_pathways.tab",row.names = F)
 
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
@@ -92,16 +94,4 @@ write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.ta
 system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
 
 system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
-
-#oxidative phosphorylation####
-
-attach(with_pathways)
-
-oxphos<-with_pathways[pathway=="00190|Oxidative phosphorylation",]
-no_blanks<-oxphos[oxphos$product_name!="",]
-no_hypothetical<-no_blanks[grep("hypothetical",no_blanks$product_name,ignore.case = T,invert = T),]
-oxphos<-no_hypothetical
-rm(no_blanks,no_hypothetical)
-
-oxphos_product_sums<-rowsum(oxphos[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group=oxphos$product_name)
 
