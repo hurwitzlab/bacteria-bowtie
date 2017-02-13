@@ -50,7 +50,7 @@ with_pathways<-with_pathways[grep(".*putative*",with_pathways$product_name,perl=
 no_dups<-with_pathways[!duplicated(with_pathways),]
 with_pathways<-no_dups
 rm(no_dups)
-write.table(with_pathways,"with_pathways.tab",row.names = F)
+#write.table(with_pathways,"with_pathways.tab",row.names = F)
 
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
@@ -87,11 +87,11 @@ heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), c
 
 new_bubble_source <- shortened[,1:5]
 
-setwd("~/bacteria-bowtie/scripts/R-interactive/")
+#setwd("~/bacteria-bowtie/scripts/R-interactive/")
 
-write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
+#write.table(new_bubble_source,"sum_by_kegg_pathway_ordered_by_combined_effect.tab", sep = "\t", quote = T,row.names = F)
 
-system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
+#system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered_by_combined_effect.tab CombinedBubble_orderedbyeffect")
 
-system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+#system("cp CombinedBubble_orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
 
