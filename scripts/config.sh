@@ -57,6 +57,9 @@ export ALLrRNAGFF="$BACT_DIR/all/bowtie2_index/all-PATRIC-rRNA.gff"
 export ALLFASTA="$BACT_DIR/all/bowtie2_index/all.fa"
 #all those patric CDS tabs for the 1944
 export ALLPATRIC_ANNOT="$BACT_DIR/all/patric_annot"
+#and same for refseq CDS annotation
+export ALLREFSEQ_ANNOT="$BACT_DIR/all/refseq_annot"
+export ALLREFSEQTAB="$BACT_DIR/all/bowtie2_index/all-refseq-CDS.tab"
 
 #the combined: the 1944 "best" genomes and the "low alignment score / unknown" that was assembled and then annotated
 export COMB_DIR="$BACT_DIR/combined"
@@ -99,6 +102,7 @@ export TEMP_DIR="$PRJ_DIR/tmp"
 
 #where patric annotation is
 export PATRIC_ANNOT="/rsgrps/bhurwitz/hurwitzlab/data/reference/patric_annot/patric_cds"
+export REFSEQ_ANNOT="/rsgrps/bhurwitz/hurwitzlab/data/reference/patric_annot/refseq_cds"
 #where patric gff's are
 export PATRIC_GFFS="/rsgrps/bhurwitz/hurwitzlab/data/reference/patric_annot/gff"
 export REFSEQ_GFFS=$PATRIC_GFFS
