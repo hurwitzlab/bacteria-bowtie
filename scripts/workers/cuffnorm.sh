@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #PBS -W group_list=bhurwitz
-#PBS -q qualified
+#PBS -q standard
 #PBS -l select=1:ncpus=12:mem=72gb
 ###and the amount of time required to run it
 #PBS -l walltime=24:00:00
@@ -31,6 +31,12 @@ elif [ $SAMDIR == $BFRAG_OUT ]; then
 elif [ $SAMDIR == $ALLBACT_OUT ]; then
     export GFF=$ALLGFF
     export rRNAGFF=$ALLrRNAGFF
+elif [ $SAMDIR == $COMB_OUT ]; then
+    export GFF=$COMBGFF
+    export rRNAGFF=$COMBrRNAGFF
+elif [ $SAMDIR == $UNK_OUT ]; then
+    export GFF=$UNKGFF
+    export rRNAGFF=$UNKrRNAGFF
 fi
 
 cd $SAMDIR
@@ -48,6 +54,6 @@ else
 fi
 
 time cuffnorm -p 12 --labels S1,S2,S3,S4 \
-    -o cuffnorm-out \
+    -o combined-cuffnorm-out \
     --quiet \
     $GFF $(cat $ALLCXBS)

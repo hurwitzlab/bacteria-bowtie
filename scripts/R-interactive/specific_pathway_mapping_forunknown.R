@@ -1,8 +1,14 @@
 setwd("/Users/Scott/combined-cuffnorm-out")
 
-library(reshape2)
-library(tidyr)
 library(RColorBrewer)
+
+#probably don't need these yet
+#library(KEGGgraph)
+#library(KEGGREST)
+
+#this might work later if I really wanted to work at it
+#but too much work for now
+#source("/Users/Scott/tophat-bacteria/scripts/R-interactive/uglyMerge.R")
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
@@ -15,8 +21,6 @@ sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
 colnames(sum_by_gene_name)[1]<-"gene"
 sum_by_gene_name<-sum_by_gene_name[,1:5]
 sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
-
-
 
 #for LPS pathway####
 # lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
@@ -159,4 +163,3 @@ oldPar <- par(no.readonly = T)
 myColors=colorRampPalette(c("Blue","Yellow"))
 
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
-
