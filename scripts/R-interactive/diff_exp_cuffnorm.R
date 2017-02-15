@@ -33,6 +33,11 @@ colnames(gene_annotation)<-c("tracking_id","gene")
 
 filtered_annotated<-merge(filtered,annotation,by="tracking_id")
 filtered_annotated<-merge(filtered_annotated,gene_annotation,by="tracking_id",all = F)
+
+#let's add the ec numbers too!
+ec_annotation<-read.table("id_to_ecnumber.tab",header=F,sep='\t',quote="",col.names = c("tracking_id","ec_number"))
+filtered_annotated<-merge(filtered_annotated,ec_annotation,by="tracking_id",all = F)
+
 filtered_annotated<-filtered_annotated[order(filtered_annotated$sum,decreasing = T),]
 
 sum_by_product_name<-rowsum(filtered_annotated[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = filtered_annotated$product_name)
