@@ -33,14 +33,14 @@ else
     init_dir "$ALLREFSEQ_ANNOT"
     echo Made $ALLREFSEQ_ANNOT
 fi
-
-if [ -d $ALLPATRIC_ANNOT ]; then
-    echo Copying files to $ALLPATRIC_ANNOT
-else
-    init_dir "$ALLPATRIC_ANNOT"
-    echo Made $ALLPATRIC_ANNOT
-fi
-
+#
+#if [ -d $ALLPATRIC_ANNOT ]; then
+#    echo Copying files to $ALLPATRIC_ANNOT
+#else
+#    init_dir "$ALLPATRIC_ANNOT"
+#    echo Made $ALLPATRIC_ANNOT
+#fi
+#
 for FILE in $(cat $TMP_FILE); do
     set -x
     #already got the genomes
