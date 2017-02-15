@@ -1,6 +1,6 @@
 #DONE
 #these commands make id_to_gene, id_to_product and id_to_ec_number
-#setwd("/Users/Scott/tophat-bacteria/scripts/R-interactive")
+#setwd("/Users/Scott/bacteria-bowtie/scripts/R-interactive")
 #system(command = "./cuffnorm-pathways.sh")
 #DONE
 
@@ -8,7 +8,7 @@ library(reshape2)
 library(tidyr)
 library(RColorBrewer)
 
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/cuffnorm-out")
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
@@ -50,6 +50,10 @@ with_pathways<-with_pathways[grep(".*putative*",with_pathways$product_name,perl=
 no_dups<-with_pathways[!duplicated(with_pathways),]
 with_pathways<-no_dups
 rm(no_dups)
+
+#let's add EC numbers
+
+
 #write.table(with_pathways,"with_pathways.tab",row.names = F)
 
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
