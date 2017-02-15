@@ -42,31 +42,49 @@ oxphos_product_sums<-oxphos_product_sums[order(oxphos_product_sums$combined_effe
 # important2 <- merge(x=atpa,y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all = F)
 
 #lets write some excel tables
-# write.xlsx(oxphos_product_sums,"oxphos_product_sums.xlsx")
+write.xlsx(oxphos_product_sums,"oxphos_product_sums.xlsx")
 # write.xlsx(important,"atp synthase beta chain downregulated.xlsx")
 # write.xlsx(important2,"atp synthatse alpha chain upregualted.xlsx")
 
-# benzoate degredation ####
+#oxphos ec sums ####
 
-benzoate<-with_pathways[pathway=="00362|Benzoate degradation via hydroxylation",]
-no_blanks<-benzoate[benzoate$product_name!="",]
-benzoate<-no_blanks
-rm(no_blanks)
-
-benzoate_product_sums<-rowsum(benzoate[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=benzoate$product_name)
-truthy<-apply(benzoate_product_sums,1,function(row) all(row != 0))
-no_zeros<-benzoate_product_sums[truthy,]
-benzoate_product_sums<-no_zeros
+oxphos_ec_sums<-rowsum(oxphos[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=oxphos$ec_number)
+truthy<-apply(oxphos_ec_sums,1,function(row) all(row != 0))
+no_zeros<-oxphos_ec_sums[truthy,]
+oxphos_ec_sums<-no_zeros
 rm(truthy,no_zeros)
 
-colnames(benzoate_product_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+colnames(oxphos_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 
-benzoate_product_sums$combined_effect<-log(benzoate_product_sums$`S-H+ (Combined)`/benzoate_product_sums$`S+H- (Control)`)
-benzoate_product_sums$Hhep_effect<-log(benzoate_product_sums$`S+H+ (H. hepaticus only)`/benzoate_product_sums$`S+H- (Control)`)
-benzoate_product_sums$smad_effect<-log(benzoate_product_sums$`S-H- (SMAD3 Knockout)`/benzoate_product_sums$`S+H- (Control)`)
-benzoate_product_sums<-benzoate_product_sums[order(benzoate_product_sums$combined_effect , decreasing = T),]
+oxphos_ec_sums$combined_effect<-log(oxphos_ec_sums$`S-H+ (Combined)`/oxphos_ec_sums$`S+H- (Control)`)
+oxphos_ec_sums$Hhep_effect<-log(oxphos_ec_sums$`S+H+ (H. hepaticus only)`/oxphos_ec_sums$`S+H- (Control)`)
+oxphos_ec_sums$smad_effect<-log(oxphos_ec_sums$`S-H- (SMAD3 Knockout)`/oxphos_ec_sums$`S+H- (Control)`)
+oxphos_ec_sums<-oxphos_ec_sums[order(oxphos_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(oxphos_ec_sums,"oxphos_ec_sums.xlsx")
+
+# peptidoglycan biosynthesis ####
+
+peptid<-with_pathways[pathway=="00550|Peptidoglycan biosynthesis",]
+no_blanks<-peptid[peptid$product_name!="",]
+peptid<-no_blanks
+rm(no_blanks)
+
+peptid_product_sums<-rowsum(peptid[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=peptid$product_name)
+truthy<-apply(peptid_product_sums,1,function(row) all(row != 0))
+no_zeros<-peptid_product_sums[truthy,]
+peptid_product_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(peptid_product_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+
+peptid_product_sums$combined_effect<-log(peptid_product_sums$`S-H+ (Combined)`/peptid_product_sums$`S+H- (Control)`)
+peptid_product_sums$Hhep_effect<-log(peptid_product_sums$`S+H+ (H. hepaticus only)`/peptid_product_sums$`S+H- (Control)`)
+peptid_product_sums$smad_effect<-log(peptid_product_sums$`S-H- (SMAD3 Knockout)`/peptid_product_sums$`S+H- (Control)`)
+peptid_product_sums<-peptid_product_sums[order(peptid_product_sums$combined_effect , decreasing = T),]
 
 
 
 #lets write some excel tables
-write.xlsx(benzoate_product_sums,"benzoate_product_sums.xlsx")
+write.xlsx(peptid_product_sums,"peptid_product_sums.xlsx")
