@@ -13,23 +13,25 @@ setwd("/Users/Scott/cuffnorm-out")
 
 #setup####
 filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
-filtered_annotated <- filtered_annotated[,2:9]
+filtered_annotated <- filtered_annotated[,2:length(colnames(filtered_annotated))]
 attach(filtered_annotated)
 
+#ALREADY DONE
 #don't need no hypothetical proteins
-filtered_annotated <- filtered_annotated[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
-sum_by_product_name <- read.csv("sum_by_product_name.csv")
-colnames(sum_by_product_name)[1]<-"product"
-attach(sum_by_product_name)
+# filtered_annotated <- filtered_annotated[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
+# sum_by_product_name <- read.csv("sum_by_product_name.csv")
+# colnames(sum_by_product_name)[1]<-"product"
+# attach(sum_by_product_name)
 
+#ALREADY DONE
 #don't need no hypothetical proteins
-sum_by_product_name <- sum_by_product_name[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
-sum_by_product_name<-sum_by_product_name[,1:5]
-sum_by_product_name$product <- tolower(sum_by_product_name$product)
-sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
-colnames(sum_by_gene_name)[1]<-"gene"
-sum_by_gene_name<-sum_by_gene_name[,1:5]
-sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
+# sum_by_product_name <- sum_by_product_name[grep(".*hypothetical protein.*",product_name,perl=T,invert=T),]
+# sum_by_product_name<-sum_by_product_name[,1:5]
+# sum_by_product_name$product <- tolower(sum_by_product_name$product)
+# sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
+# colnames(sum_by_gene_name)[1]<-"gene"
+# sum_by_gene_name<-sum_by_gene_name[,1:5]
+# sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
 #now we will attempt to add pathways####
 #patric_annotation <- read.delim("all.PATRIC.cds.tab")
@@ -45,37 +47,34 @@ sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 # (Already done) cut -f 15,21 all.PATRIC.cds.tab > product_to_pathway.tab
 # grep -P '\S\t\S' product_to_pathway.tab > temp.tab
 # mv temp.tab product_to_pathway.tab
-
 #patric_annotation <- read.delim("product_to_pathway.tab")
 #patric_annotation$product <- tolower(patric_annotation$product)
 #with_pathways<-merge(x=filtered_annotated,y=patric_annotation,by.x="product_name",by.y="product")
 #This took up 144gb of mem on HPC
 #and ended up being a 84gb tab-delimited file!
 
-####Start here again####
-with_pathways<-with_pathways[grep(".+",with_pathways$pathway),]
+#ALREADY DONE
+#system('cd "/Users/Scott/cuffnorm-out" && cut -f7,19 all.refseq.cds.tab > refseq_locus_to_kegg_pathway.tab')
+
+refseq_annotation <- read.delim("refseq_locus_to_kegg_pathway.tab")
+with_pathways<-merge(x=filtered_annotated,y=refseq_annotation,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
+
 with_pathways<-separate_rows(with_pathways, pathway, sep = ";")
+no_dup<-with_pathways[!duplicated(with_pathways),]
+with_pathways<-no_dup
+rm(no_dup)
 
-#because parantheses suck and %2c too (,)
-gsub('\"','',with_pathways$product_name)->with_pathways$product_name
-gsub('%2c',',',with_pathways$product_name)->with_pathways$product_name
-#trying to remove some of the inconsistent names from products
-#and hypotheticals, probables, predicted
-with_pathways<-with_pathways[grep(".*hypothetical protein.*",with_pathways$product_name,perl=T,invert=T),]
-with_pathways<-with_pathways[grep(".*probable.*",with_pathways$product_name,perl=T,invert=T),]
-with_pathways<-with_pathways[grep(".*predicted.*",with_pathways$product_name,perl=T,invert=T),]
-with_pathways<-with_pathways[grep(".*uncharacterized.*",with_pathways$product_name,perl=T,invert=T),]
+length(with_pathways$pathway[with_pathways$pathway!=''])
+#14642 of 146162 actually have annotated pathways, eek!
+no_blanks<-with_pathways[with_pathways$pathway!='',]
+with_pathways<-no_blanks
+rm(no_blanks)
 
-with_pathways<-with_pathways[grep(".*putative*",with_pathways$product_name,perl=T,invert=T),]
+not_na<-with_pathways[!is.na(with_pathways$pathway),]
+with_pathways<-not_na
+rm(not_na)
 
-no_dups<-with_pathways[!duplicated(with_pathways),]
-with_pathways<-no_dups
-rm(no_dups)
-
-#let's add EC numbers
-
-
-#write.table(with_pathways,"with_pathways.tab",row.names = F)
+write.table(with_pathways,"with_pathways.tab",row.names = F)
 
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
@@ -110,6 +109,15 @@ myColors=colorRampPalette(c("Blue","Yellow"))
 #a heatmap, cuz why not!
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO","Nothing"))
 
+min(x) #-1.2
+max(x) #3.1
+
 new_bubble_source <- shortened[,1:5]
-setwd("~/tophat-bacteria/scripts/R-interactive/")
-write.table(shortened,"sum_by_kegg_pathway_above_mean.tab", sep = "\t", quote = T,row.names = F)
+
+setwd("~/bacteria-bowtie/scripts/R-interactive/")
+
+write.table(new_bubble_source,"sum_by_kegg_pathway_ordered.tab", sep = "\t", quote = T,row.names = F)
+
+system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered.tab orderedbyeffect")
+
+system("cp orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")

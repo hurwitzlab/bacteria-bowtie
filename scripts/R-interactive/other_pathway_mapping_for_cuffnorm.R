@@ -1,4 +1,4 @@
-setwd("/Users/Scott/Google Drive/Hurwitz Lab/cuffnorm-out")
+setwd("/Users/Scott/cuffnorm-out")
 
 library(reshape2)
 library(tidyr)
