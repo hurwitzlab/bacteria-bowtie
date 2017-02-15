@@ -5,43 +5,82 @@ library(tidyr)
 library(RColorBrewer)
 
 #setup####
-with_pathways<-read.table("with_pathways.tab",header=T)
+filtered_annotated <- read.csv("diff_exp_for_all_bact.csv")
+filtered_annotated <- filtered_annotated[,2:9]
+sum_by_product_name <- read.csv("sum_by_product_name.csv")
+colnames(sum_by_product_name)[1]<-"product"
+sum_by_product_name<-sum_by_product_name[,1:5]
+sum_by_product_name$product <- tolower(sum_by_product_name$product)
+sum_by_gene_name <- read.csv("sum_by_gene_name.csv")
+colnames(sum_by_gene_name)[1]<-"gene"
+sum_by_gene_name<-sum_by_gene_name[,1:5]
+sum_by_gene_name$gene <- tolower(sum_by_gene_name$gene)
 
-#oxidative phosphorylation####
 
-attach(with_pathways)
-
-oxphos<-with_pathways[pathway=="00190|Oxidative phosphorylation",]
-no_blanks<-oxphos[oxphos$product_name!="",]
-oxphos<-no_blanks
-rm(no_blanks)
-
-oxphos_product_sums<-rowsum(oxphos[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group=oxphos$product_name)
-truthy<-apply(oxphos_product_sums,1,function(row) all(row != 0))
-no_zeros<-oxphos_product_sums[truthy,]
-oxphos_product_sums<-no_zeros
-rm(truthy,no_zeros)
-
-colnames(oxphos_product_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
-
-oxphos_product_sums$combined_effect<-log(oxphos_product_sums$`S-H+ (Combined)`/oxphos_product_sums$`S+H- (Control)`)
-oxphos_product_sums$Hhep_effect<-log(oxphos_product_sums$`S+H+ (H. hepaticus only)`/oxphos_product_sums$`S+H- (Control)`)
-oxphos_product_sums$smad_effect<-log(oxphos_product_sums$`S-H- (SMAD3 Knockout)`/oxphos_product_sums$`S+H- (Control)`)
-oxphos_product_sums<-oxphos_product_sums[order(oxphos_product_sums$combined_effect , decreasing = T),]
-
-#welp, the top changed product is atp synthase, both positive and negative! ha!
 
 #for LPS pathway####
-lps_path<-read.table("LPS_search_list",sep = "\t",comment.char = "#")
-lowercase_lps<-data.frame(tolower(lps_path[,1]))
-lps_path<-lowercase_lps
-colnames(lps_path)<-"V1"
-rm(lowercase_lps)
-lps_genes<-data.frame(gene=lps_path[34:96,])
-lps_products<-data.frame(product=lps_path[1:34,])
 
-just_lps_products<-merge(x=sum_by_product_name,y=lps_products,by="product",all=F)
-just_lps_genes<-merge(x=sum_by_gene_name,y=lps_genes,by="gene",all=F)
+lps<-with_pathways[pathway=="00540|Lipopolysaccharide biosynthesis",]
+no_blanks<-lps[lps$product_name!="",]
+lps<-no_blanks
+rm(no_blanks)
+
+lps_product_sums<-rowsum(lps[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=lps$product_name)
+truthy<-apply(lps_product_sums,1,function(row) all(row != 0))
+no_zeros<-lps_product_sums[truthy,]
+lps_product_sums<-no_zeros
+rm(truthy,no_zeros)
+
+#add gene annotation
+lps_product_to_gene<-lps[lps$gene!='',c("product_name","gene")]
+no_dups<-lps_product_to_gene[!duplicated(lps_product_to_gene),]
+lps_product_to_gene<-no_dups
+rm(no_dups)
+lps_product_sums$product_name=rownames(lps_product_sums)
+lps_product_sums<-merge(lps_product_sums,lps_product_to_gene,by="product_name")
+
+#TODO####
+#TODO:get rid of some duplicate product_names (multiple genes per product name)
+
+colnames(lps_product_sums)=c("product_name","S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)","gene")
+
+lps_product_sums$combined_effect<-log(lps_product_sums$`S-H+ (Combined)`/lps_product_sums$`S+H- (Control)`)
+lps_product_sums$Hhep_effect<-log(lps_product_sums$`S+H+ (H. hepaticus only)`/lps_product_sums$`S+H- (Control)`)
+lps_product_sums$smad_effect<-log(lps_product_sums$`S-H- (SMAD3 Knockout)`/lps_product_sums$`S+H- (Control)`)
+lps_product_sums<-lps_product_sums[order(lps_product_sums$combined_effect , decreasing = T),]
+
+# and now heatmap for LPS####
+
+lps_product_sums <- lps_product_sums[order(lps_product_sums$combined_effect),]
+
+row.names(lps_product_sums)<-paste(lps_product_sums$product_name,lps_product_sums$gene)
+
+lps_product_sums <- data.matrix(lps_product_sums[,7:9])
+
+x=lps_product_sums
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+
+lps_product_sums <- read.delim("for_lps_heatmap.txt",header = T)
+
+row.names(lps_product_sums)<-lps_product_sums$gene
+
+lps_product_sums <- lps_product_sums[order(lps_product_sums$cancer),]
+
+lps_product_sums <- data.matrix(lps_product_sums[,4:6])
+
+x=lps_product_sums
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
+
 
 #for polyamines####
 polyamines<-read.table("polyamine-search-list",sep="\t",comment.char = "#")
@@ -75,44 +114,6 @@ myColors=colorRampPalette(c("Blue","Yellow"))
 
 heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
 
-# and now heatmap for LPS####
-
-lps_annot=read.table("LPS_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
-lps_annot$product <- tolower(lps_annot$product)
-just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
-#write.csv(just_lps_products_annot,"just_lps_products_annot.csv")
-
-just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
-
-row.names(just_lps_from_excel)<-just_lps_from_excel$ecnumber
-
-just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
-
-just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
-
-x=just_lps_from_excel
-
-oldPar <- par(no.readonly = T)
-
-myColors=colorRampPalette(c("Blue","Yellow"))
-
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
-
-just_lps_from_excel <- read.delim("for_lps_heatmap.txt",header = T)
-
-row.names(just_lps_from_excel)<-just_lps_from_excel$gene
-
-just_lps_from_excel <- just_lps_from_excel[order(just_lps_from_excel$cancer),]
-
-just_lps_from_excel <- data.matrix(just_lps_from_excel[,4:6])
-
-x=just_lps_from_excel
-
-oldPar <- par(no.readonly = T)
-
-myColors=colorRampPalette(c("Blue","Yellow"))
-
-heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none", margins=c(5,5), cexCol=1, labCol = c("Cancer", "Inflammation","SMAD3-KO"))
 
 #for Butanoate pathway####
 butanoate_annot=read.table("butanoate_list_annotation",header = T,sep = ";",strip.white = T,quote = "")
