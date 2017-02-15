@@ -1,6 +1,8 @@
-../data/
-../genomes/
+data/
+genomes/
 example_cuffdiff.sh
 out/
-../tmp/
+tmp/
 .Rhistory
+Rhistory
+*Rhistory*
