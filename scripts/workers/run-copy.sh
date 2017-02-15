@@ -2,7 +2,7 @@
 
 #PBS -W group_list=bhurwitz
 #PBS -q standard
-#PBS -l select=1:ncpus=2:mem=3gb
+#PBS -l select=1:ncpus=1:mem=3gb
 #PBS -l walltime=0:30:00
 #PBS -l cput=0:30:00
 #PBS -M scottdaniel@email.arizona.edu
@@ -45,7 +45,7 @@ for FILE in $(cat $TMP_FILE); do
     set -x
     #already got the genomes
     #cp $PATRIC_GENOMES/"$FILE".fna $ALLPATRIC_ANNOT
-    cp $REFSEQ_ANNOT/"$FILE".REFSEQ.cds.tab $ALLREFSEQ_ANNOT
+    cp $REFSEQ_ANNOT/"$FILE".RefSeq.cds.tab $ALLREFSEQ_ANNOT
 done
 
 echo Concatenating all those individual files into one
@@ -55,6 +55,7 @@ if [[ -e $ALLREFSEQTAB ]]; then
     rm $ALLREFSEQTAB
 fi
 
-find $ALLREFSEQ_ANNOT -iname *.tab -print0 | xargs -0 -I file cat file > $ALLREFSEQTAB
+#you have to run this after because its a job array
+#find $ALLREFSEQ_ANNOT -iname *.tab -print0 | xargs -0 -I file cat file > $ALLREFSEQTAB
 
 printf "\nDONE\n\n"
