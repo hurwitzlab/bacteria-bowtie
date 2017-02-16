@@ -7,3 +7,4 @@ tmp/
 Rhistory
 *Rhistory*
 .Rproj*
+.DS_Store
