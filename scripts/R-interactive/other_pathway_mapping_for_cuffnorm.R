@@ -1,9 +1,8 @@
 setwd("/Users/Scott/cuffnorm-out")
 
-library(reshape2)
 library(tidyr)
-library(RColorBrewer)
 library(xlsx)
+library(plyr)
 
 #setup####
 with_pathways<-read.table("with_pathways.tab",header=T)
@@ -55,6 +54,23 @@ oxphos_ec_sums<-no_zeros
 rm(truthy,no_zeros)
 
 colnames(oxphos_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+oxphos_ec_sums$ec_number=row.names(oxphos_ec_sums)
+
+#decorate ec_sums with gene and product names
+oxphos_ec_sums <- merge(oxphos_ec_sums,oxphos[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-oxphos_ec_sums[!duplicated(oxphos_ec_sums),]
+oxphos_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(oxphos_ec_sums,aliases,c(product_name,gene),sep = ",")
+oxphos_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(oxphos_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+oxphos_ec_sums<-collapsed
+rm(collapsed)
 
 oxphos_ec_sums$combined_effect<-log(oxphos_ec_sums$`S-H+ (Combined)`/oxphos_ec_sums$`S+H- (Control)`)
 oxphos_ec_sums$Hhep_effect<-log(oxphos_ec_sums$`S+H+ (H. hepaticus only)`/oxphos_ec_sums$`S+H- (Control)`)
@@ -62,29 +78,86 @@ oxphos_ec_sums$smad_effect<-log(oxphos_ec_sums$`S-H- (SMAD3 Knockout)`/oxphos_ec
 oxphos_ec_sums<-oxphos_ec_sums[order(oxphos_ec_sums$combined_effect , decreasing = T),]
 
 #lets write some excel tables
-write.xlsx(oxphos_ec_sums,"oxphos_ec_sums.xlsx")
+write.xlsx(oxphos_ec_sums,"oxphos_ec_sums_with_aliases.xlsx",row.names = F)
 
-# peptidoglycan biosynthesis ####
+#nitrogen metabolism ####
 
-peptid<-with_pathways[pathway=="00550|Peptidoglycan biosynthesis",]
-no_blanks<-peptid[peptid$product_name!="",]
-peptid<-no_blanks
+nitros<-with_pathways[pathway=="00910|Nitrogen metabolism",]
+no_blanks<-nitros[nitros$product_name!="",]
+nitros<-no_blanks
 rm(no_blanks)
 
-peptid_product_sums<-rowsum(peptid[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=peptid$product_name)
-truthy<-apply(peptid_product_sums,1,function(row) all(row != 0))
-no_zeros<-peptid_product_sums[truthy,]
-peptid_product_sums<-no_zeros
+nitros_ec_sums<-rowsum(nitros[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=nitros$ec_number)
+truthy<-apply(nitros_ec_sums,1,function(row) all(row != 0))
+no_zeros<-nitros_ec_sums[truthy,]
+nitros_ec_sums<-no_zeros
 rm(truthy,no_zeros)
 
-colnames(peptid_product_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+colnames(nitros_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+nitros_ec_sums$ec_number=row.names(nitros_ec_sums)
 
-peptid_product_sums$combined_effect<-log(peptid_product_sums$`S-H+ (Combined)`/peptid_product_sums$`S+H- (Control)`)
-peptid_product_sums$Hhep_effect<-log(peptid_product_sums$`S+H+ (H. hepaticus only)`/peptid_product_sums$`S+H- (Control)`)
-peptid_product_sums$smad_effect<-log(peptid_product_sums$`S-H- (SMAD3 Knockout)`/peptid_product_sums$`S+H- (Control)`)
-peptid_product_sums<-peptid_product_sums[order(peptid_product_sums$combined_effect , decreasing = T),]
+#decorate ec_sums with gene and product names
+nitros_ec_sums <- merge(nitros_ec_sums,nitros[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-nitros_ec_sums[!duplicated(nitros_ec_sums),]
+nitros_ec_sums<-no_dups
+rm(no_dups)
 
+#combine gene and product_name columns
+combined<-unite(nitros_ec_sums,aliases,c(product_name,gene),sep = ",")
+nitros_ec_sums<-combined
+rm(combined)
 
+#grab together the multiple product names
+collapsed<-ddply(nitros_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+nitros_ec_sums<-collapsed
+rm(collapsed)
+
+nitros_ec_sums$combined_effect<-log(nitros_ec_sums$`S-H+ (Combined)`/nitros_ec_sums$`S+H- (Control)`)
+nitros_ec_sums$Hhep_effect<-log(nitros_ec_sums$`S+H+ (H. hepaticus only)`/nitros_ec_sums$`S+H- (Control)`)
+nitros_ec_sums$smad_effect<-log(nitros_ec_sums$`S-H- (SMAD3 Knockout)`/nitros_ec_sums$`S+H- (Control)`)
+nitros_ec_sums<-nitros_ec_sums[order(nitros_ec_sums$combined_effect , decreasing = T),]
 
 #lets write some excel tables
-write.xlsx(peptid_product_sums,"peptid_product_sums.xlsx")
+write.xlsx(nitros_ec_sums,"nitros_ec_sums_with_aliases.xlsx",row.names = F)
+
+#citrate tca cycle####
+
+citrate<-with_pathways[pathway=="00020|Citrate cycle (TCA cycle)",]
+no_blanks<-citrate[citrate$product_name!="",]
+citrate<-no_blanks
+rm(no_blanks)
+
+citrate_ec_sums<-rowsum(citrate[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=citrate$ec_number)
+truthy<-apply(citrate_ec_sums,1,function(row) all(row != 0))
+no_zeros<-citrate_ec_sums[truthy,]
+citrate_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(citrate_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+citrate_ec_sums$ec_number=row.names(citrate_ec_sums)
+
+#decorate ec_sums with gene and product names
+citrate_ec_sums <- merge(citrate_ec_sums,citrate[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-citrate_ec_sums[!duplicated(citrate_ec_sums),]
+citrate_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(citrate_ec_sums,aliases,c(product_name,gene),sep = ",")
+citrate_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(citrate_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+citrate_ec_sums<-collapsed
+rm(collapsed)
+
+citrate_ec_sums$combined_effect<-log(citrate_ec_sums$`S-H+ (Combined)`/citrate_ec_sums$`S+H- (Control)`)
+citrate_ec_sums$Hhep_effect<-log(citrate_ec_sums$`S+H+ (H. hepaticus only)`/citrate_ec_sums$`S+H- (Control)`)
+citrate_ec_sums$smad_effect<-log(citrate_ec_sums$`S-H- (SMAD3 Knockout)`/citrate_ec_sums$`S+H- (Control)`)
+citrate_ec_sums<-citrate_ec_sums[order(citrate_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(citrate_ec_sums,"citrate_ec_sums_with_aliases.xlsx",row.names = F)
+
+
