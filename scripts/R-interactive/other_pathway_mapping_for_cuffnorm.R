@@ -6,12 +6,11 @@ library(plyr)
 
 #setup####
 with_pathways<-read.table("with_pathways.tab",header=T)
+attach(with_pathways)
 
 #PATHWAYS THAT ARE UP OVERALL####
 
 #oxidative phosphorylation####
-
-attach(with_pathways)
 
 oxphos<-with_pathways[pathway=="00190|Oxidative phosphorylation",]
 no_blanks<-oxphos[oxphos$product_name!="",]
@@ -282,7 +281,205 @@ methane_ec_sums<-methane_ec_sums[order(methane_ec_sums$combined_effect , decreas
 #lets write some excel tables
 write.xlsx(methane_ec_sums,"methane_ec_sums_with_aliases.xlsx",row.names = F)
 
+
 #PATHWAYS THAT ARE DOWN OVERALL####
 
+#Peptidoglycan biosynthesis####
 
+peptid<-with_pathways[pathway=="00550|Peptidoglycan biosynthesis",]
+no_blanks<-peptid[peptid$product_name!="",]
+peptid<-no_blanks
+rm(no_blanks)
 
+peptid_ec_sums<-rowsum(peptid[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=peptid$ec_number)
+truthy<-apply(peptid_ec_sums,1,function(row) all(row != 0))
+no_zeros<-peptid_ec_sums[truthy,]
+peptid_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(peptid_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+peptid_ec_sums$ec_number=row.names(peptid_ec_sums)
+
+#decorate ec_sums with gene and product names
+peptid_ec_sums <- merge(peptid_ec_sums,peptid[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-peptid_ec_sums[!duplicated(peptid_ec_sums),]
+peptid_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(peptid_ec_sums,aliases,c(product_name,gene),sep = ",")
+peptid_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(peptid_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+peptid_ec_sums<-collapsed
+rm(collapsed)
+
+peptid_ec_sums$combined_effect<-log(peptid_ec_sums$`S-H+ (Combined)`/peptid_ec_sums$`S+H- (Control)`)
+peptid_ec_sums$Hhep_effect<-log(peptid_ec_sums$`S+H+ (H. hepaticus only)`/peptid_ec_sums$`S+H- (Control)`)
+peptid_ec_sums$smad_effect<-log(peptid_ec_sums$`S-H- (SMAD3 Knockout)`/peptid_ec_sums$`S+H- (Control)`)
+peptid_ec_sums<-peptid_ec_sums[order(peptid_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(peptid_ec_sums,"peptid_ec_sums_with_aliases.xlsx",row.names = F)
+
+#00290|Valine, leucine and isoleucine biosynthesis####
+
+valine<-with_pathways[pathway=="00290|Valine, leucine and isoleucine biosynthesis",]
+no_blanks<-valine[valine$product_name!="",]
+valine<-no_blanks
+rm(no_blanks)
+
+valine_ec_sums<-rowsum(valine[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=valine$ec_number)
+truthy<-apply(valine_ec_sums,1,function(row) all(row != 0))
+no_zeros<-valine_ec_sums[truthy,]
+valine_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(valine_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+valine_ec_sums$ec_number=row.names(valine_ec_sums)
+
+#decorate ec_sums with gene and product names
+valine_ec_sums <- merge(valine_ec_sums,valine[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-valine_ec_sums[!duplicated(valine_ec_sums),]
+valine_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(valine_ec_sums,aliases,c(product_name,gene),sep = ",")
+valine_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(valine_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+valine_ec_sums<-collapsed
+rm(collapsed)
+
+valine_ec_sums$combined_effect<-log(valine_ec_sums$`S-H+ (Combined)`/valine_ec_sums$`S+H- (Control)`)
+valine_ec_sums$Hhep_effect<-log(valine_ec_sums$`S+H+ (H. hepaticus only)`/valine_ec_sums$`S+H- (Control)`)
+valine_ec_sums$smad_effect<-log(valine_ec_sums$`S-H- (SMAD3 Knockout)`/valine_ec_sums$`S+H- (Control)`)
+valine_ec_sums<-valine_ec_sums[order(valine_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(valine_ec_sums,"valine_ec_sums_with_aliases.xlsx",row.names = F)
+
+#Fatty acid metabolism####
+
+fatty<-with_pathways[pathway=="00071|Fatty acid metabolism",]
+no_blanks<-fatty[fatty$product_name!="",]
+fatty<-no_blanks
+rm(no_blanks)
+
+fatty_ec_sums<-rowsum(fatty[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=fatty$ec_number)
+truthy<-apply(fatty_ec_sums,1,function(row) all(row != 0))
+no_zeros<-fatty_ec_sums[truthy,]
+fatty_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(fatty_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+fatty_ec_sums$ec_number=row.names(fatty_ec_sums)
+
+#decorate ec_sums with gene and product names
+fatty_ec_sums <- merge(fatty_ec_sums,fatty[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-fatty_ec_sums[!duplicated(fatty_ec_sums),]
+fatty_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(fatty_ec_sums,aliases,c(product_name,gene),sep = ",")
+fatty_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(fatty_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+fatty_ec_sums<-collapsed
+rm(collapsed)
+
+fatty_ec_sums$combined_effect<-log(fatty_ec_sums$`S-H+ (Combined)`/fatty_ec_sums$`S+H- (Control)`)
+fatty_ec_sums$Hhep_effect<-log(fatty_ec_sums$`S+H+ (H. hepaticus only)`/fatty_ec_sums$`S+H- (Control)`)
+fatty_ec_sums$smad_effect<-log(fatty_ec_sums$`S-H- (SMAD3 Knockout)`/fatty_ec_sums$`S+H- (Control)`)
+fatty_ec_sums<-fatty_ec_sums[order(fatty_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(fatty_ec_sums,"fatty_ec_sums_with_aliases.xlsx",row.names = F)
+
+#00260|Glycine, serine and threonine metabolism####
+
+glycine<-with_pathways[pathway=="00260|Glycine, serine and threonine metabolism",]
+no_blanks<-glycine[glycine$product_name!="",]
+glycine<-no_blanks
+rm(no_blanks)
+
+glycine_ec_sums<-rowsum(glycine[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=glycine$ec_number)
+truthy<-apply(glycine_ec_sums,1,function(row) all(row != 0))
+no_zeros<-glycine_ec_sums[truthy,]
+glycine_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(glycine_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+glycine_ec_sums$ec_number=row.names(glycine_ec_sums)
+
+#decorate ec_sums with gene and product names
+glycine_ec_sums <- merge(glycine_ec_sums,glycine[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-glycine_ec_sums[!duplicated(glycine_ec_sums),]
+glycine_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(glycine_ec_sums,aliases,c(product_name,gene),sep = ",")
+glycine_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(glycine_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+glycine_ec_sums<-collapsed
+rm(collapsed)
+
+glycine_ec_sums$combined_effect<-log(glycine_ec_sums$`S-H+ (Combined)`/glycine_ec_sums$`S+H- (Control)`)
+glycine_ec_sums$Hhep_effect<-log(glycine_ec_sums$`S+H+ (H. hepaticus only)`/glycine_ec_sums$`S+H- (Control)`)
+glycine_ec_sums$smad_effect<-log(glycine_ec_sums$`S-H- (SMAD3 Knockout)`/glycine_ec_sums$`S+H- (Control)`)
+glycine_ec_sums<-glycine_ec_sums[order(glycine_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(glycine_ec_sums,"glycine_ec_sums_with_aliases.xlsx",row.names = F)
+
+#00195|Photosynthesis####
+
+photosynth<-with_pathways[pathway=="00195|Photosynthesis",]
+no_blanks<-photosynth[photosynth$product_name!="",]
+photosynth<-no_blanks
+rm(no_blanks)
+
+photosynth_ec_sums<-rowsum(photosynth[,c("S3_FPM","S4_FPM","S1_FPM","S2_FPM")],group=photosynth$ec_number)
+truthy<-apply(photosynth_ec_sums,1,function(row) all(row != 0))
+no_zeros<-photosynth_ec_sums[truthy,]
+photosynth_ec_sums<-no_zeros
+rm(truthy,no_zeros)
+
+colnames(photosynth_ec_sums)=c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+photosynth_ec_sums$ec_number=row.names(photosynth_ec_sums)
+
+#decorate ec_sums with gene and product names
+photosynth_ec_sums <- merge(photosynth_ec_sums,photosynth[,c("product_name","gene","ec_number")],by="ec_number",all=F)
+no_dups<-photosynth_ec_sums[!duplicated(photosynth_ec_sums),]
+photosynth_ec_sums<-no_dups
+rm(no_dups)
+
+#combine gene and product_name columns
+combined<-unite(photosynth_ec_sums,aliases,c(product_name,gene),sep = ",")
+photosynth_ec_sums<-combined
+rm(combined)
+
+#grab together the multiple product names
+collapsed<-ddply(photosynth_ec_sums, .(ec_number,`S+H- (Control)`,`S-H- (SMAD3 Knockout)`,`S+H+ (H. hepaticus only)`,`S-H+ (Combined)`), summarize, aliases=toString(aliases))
+photosynth_ec_sums<-collapsed
+rm(collapsed)
+
+photosynth_ec_sums$combined_effect<-log(photosynth_ec_sums$`S-H+ (Combined)`/photosynth_ec_sums$`S+H- (Control)`)
+photosynth_ec_sums$Hhep_effect<-log(photosynth_ec_sums$`S+H+ (H. hepaticus only)`/photosynth_ec_sums$`S+H- (Control)`)
+photosynth_ec_sums$smad_effect<-log(photosynth_ec_sums$`S-H- (SMAD3 Knockout)`/photosynth_ec_sums$`S+H- (Control)`)
+photosynth_ec_sums<-photosynth_ec_sums[order(photosynth_ec_sums$combined_effect , decreasing = T),]
+
+#lets write some excel tables
+write.xlsx(photosynth_ec_sums,"photosynth_ec_sums_with_aliases.xlsx",row.names = F)
