@@ -31,6 +31,10 @@ order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ec_number","genome","Sample","count")
 
+#going down to just 1.6.5.3 and 2.7.4.1
+melted <- melted[melted$ec_number %in% c("1.6.5.3","2.7.4.1"),]
+melted <- melted[melted$count != 0,]
+
 melted <- with(melted, melted[order(ec_number, genome, Sample),])
 plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
 plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~ec_number) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
