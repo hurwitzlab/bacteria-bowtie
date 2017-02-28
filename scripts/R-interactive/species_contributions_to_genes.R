@@ -101,33 +101,35 @@ butanoate_annot$product <- tolower(butanoate_annot$product)
 just_butanoate_products_annot <- merge(x=butanoate_annot,y=just_butanoate_products,by="product",all.x=F,all.y=T)
 attach(just_butanoate_products_annot)
 
-important<-just_butanoate_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
+#important<-just_butanoate_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
+#just buk now
+important<-just_butanoate_products_annot[ecnumber %in% c("[EC:2.7.2.7]"),]
 important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
 #need to do this with grep because names aren't exact
 # one<-filtered_annotated[grep('butyrate kinase',filtered_annotated$product_name,perl=T),]
 # two<-filtered_annotated[grep('phosphate butyryltransferase',filtered_annotated$product_name,perl=T),]
 # three<-rbind(one,two)
-important <- merge(x=important2[,c(1:5,6,7)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
+important <- merge(x=important2[,c(4:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
 important$genome_name <- lapply(important$genome_name, as.character)
 #important[is.na(important)]<-"unknown"
 
 
-colnames(important)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
-important$product_name<-gsub('.*butyrate kinase.*','butyrate kinase',important$product_name,perl = T)
-important$product_name<-gsub('.*phosphate butyryltransferase.*','phosphate butyryltransferase',important$product_name,perl = T)
+colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+#important$product_name<-gsub('.*butyrate kinase.*','butyrate kinase',important$product_name,perl = T)
+#important$product_name<-gsub('.*phosphate butyryltransferase.*','phosphate butyryltransferase',important$product_name,perl = T)
 
 important$genome_name<-as.character(important$genome_name)
-melted<-melt(important[,c(2:5,7,8)])
+melted<-melt(important[,c(2:7)])
 order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
-colnames(melted)<-c("product_name","genome","Sample","count")
+colnames(melted)<-c("ecnumber","genome","Sample","RNA count")
 
-melted <- with(melted, melted[order(product_name, genome, Sample),])
-plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+melted <- with(melted, melted[order(ecnumber, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=`RNA count`, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 
-plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+plot.bar <- ggplot(data=melted, aes(x=Sample, y=`RNA count`, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 
 ggiraph(code = print(plot.bar))
 
@@ -146,38 +148,38 @@ lps_annot$product <- tolower(lps_annot$product)
 just_lps_products_annot <- merge(x=lps_annot,y=just_lps_products,by="product",all.x=F,all.y=T)
 attach(just_lps_products_annot)
 
-#important<-just_lps_products_annot[ecnumber %in% c("[EC:2.7.2.7]","[EC:2.3.1.19]"),]
-#important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
+important<-just_lps_products_annot[ecnumber %in% c("[EC:3.5.1.108]","[EC:2.3.1.191]"),]
+important2 <- merge(x=important[,1:4],y=filtered_annotated,by.x="product",by.y="product_name",all.x=T)
 #need to do this with grep because names aren't exact
 
 #lpxC
-one<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase',filtered_annotated$product_name,perl=T),]
+#one<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase',filtered_annotated$ecnumber,perl=T),]
 
 #lpxD
-two<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase',filtered_annotated$product_name,perl=T),]
-three<-rbind(one,two)
+#two<-filtered_annotated[grep('udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase',filtered_annotated$ecnumber,perl=T),]
+#three<-rbind(one,two)
 
-important <- merge(x=three[,c(1:5,6,7)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
+important <- merge(x=important2[,c(4:9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag",all.x=T)
 important$genome_name <- lapply(important$genome_name, as.character)
-important[is.na(important)]<-"unknown"
+#important[is.na(important)]<-"unknown"
 
 
-colnames(important)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
-important$product_name<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase.*','UdpOH-Glu-N-Acyl',important$product_name,perl = T)
-important$product_name<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase.*','UdpOH-N-Acetyl-DeAc',important$product_name,perl = T)
+colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+#important$ecnumber<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase.*','UdpOH-Glu-N-Acyl',important$ecnumber,perl = T)
+#important$ecnumber<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase.*','UdpOH-N-Acetyl-DeAc',important$ecnumber,perl = T)
 
 important$genome_name<-as.character(important$genome_name)
-melted<-melt(important[,c(2:5,7,8)])
+melted<-melt(important[,c(2:7)])
 order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
-colnames(melted)<-c("product_name","genome","Sample","count")
+colnames(melted)<-c("ecnumber","genome","Sample","RNA count")
 
-melted <- with(melted, melted[order(product_name, genome, Sample),])
-plot.bar = ggplot(data=melted, aes(x=Sample, y=count, fill=genome))
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
-plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+melted <- with(melted, melted[order(ecnumber, genome, Sample),])
+plot.bar = ggplot(data=melted, aes(x=Sample, y=`RNA count`, fill=genome))
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) #+ guides(fill=FALSE)
+plot.bar + geom_bar(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 
-plot.bar <- ggplot(data=melted, aes(x=Sample, y=count, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~product_name) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
+plot.bar <- ggplot(data=melted, aes(x=Sample, y=`RNA count`, fill=genome, tooltip = genome, data_id = Sample)) + geom_bar_interactive(stat="identity", col="black", size = .5) + facet_grid(~ecnumber) + theme(text = element_text(size=12)) + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + guides(fill=FALSE)
 
 ggiraph(code = print(plot.bar))
 
