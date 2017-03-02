@@ -79,7 +79,37 @@ oxphos_ec_sums$smad_effect<-log(oxphos_ec_sums$`S-H- (SMAD3 Knockout)`/oxphos_ec
 oxphos_ec_sums<-oxphos_ec_sums[order(oxphos_ec_sums$combined_effect , decreasing = T),]
 
 #lets write some excel tables
-write.xlsx(oxphos_ec_sums,"oxphos_ec_sums_with_aliases.xlsx",row.names = F)
+#write.xlsx(oxphos_ec_sums,"oxphos_ec_sums_with_aliases.xlsx",row.names = F)
+
+#heatmap for oxphos ####
+
+oxphos2 <- oxphos_ec_sums[,c("ec_number","combined_effect","Hhep_effect","smad_effect")]
+
+row.names(oxphos2)<-oxphos2$ec_number
+
+oxphos2 <- oxphos2[order(oxphos2$combined_effect),]
+
+x <- data.matrix(oxphos2[,2:4])
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
+
+oxphos2$gene_name = c("ppk","nox1, ahpF","nuo","frd","flii/yscn","sdhA","atpA","sdhB","nuoF","ppa")
+
+row.names(oxphos2)<-oxphos2$gene_name
+
+oxphos2 <- oxphos2[order(oxphos2$combined_effect),]
+
+x <- data.matrix(oxphos2[,2:4])
+
+oldPar <- par(no.readonly = T)
+
+myColors=colorRampPalette(c("Blue","Yellow"))
+
+heatmap(x, Rowv=NA, Colv=NA, col = myColors(255),scale="none",margins=c(5,5), cexCol=1, labCol = c("Combined", "H. hepaticus","SMAD3-KO"))
 
 #nitrogen metabolism ####
 
