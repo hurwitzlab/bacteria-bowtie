@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+#PBS -W group_list=bhurwitz
+#PBS -q standard
+#PBS -j oe
+#PBS -o ./out/
+#PBS -l select=1:ncpus=24:mem=144gb
+###and the amount of time required to run it
+#PBS -l walltime=6:00:00
+#PBS -l cput=6:00:00
+#PBS -M scottdaniel@email.arizona.edu
+#PBS -m bea
+
+module load R
+
+set -u
+
+if [ -n "$PBS_O_WORKDIR" ]; then
+    cd $PBS_O_WORKDIR
+fi
+
+CONFIG="./config.sh"
+
+if [ -e $CONFIG ]; then
+  . "$CONFIG"
+else
+  echo Missing common \"$CONFIG\"
+  exit 1
+fi
+
+echo Started $(date)
+
+echo Host $(hostname)
+
+cd $COMB_OUT/combined-cuffnorm-out
+
+Rscript --verbose $SCRIPT_DIR/pathway_mapping_on_HPC.R $(pwd)
+
