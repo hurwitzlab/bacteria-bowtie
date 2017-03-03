@@ -1,6 +1,11 @@
-genomes/
 data/
-tmp/
-out/
+genomes/
 example_cuffdiff.sh
+out/
+tmp/
+.Rhistory
+Rhistory
+*Rhistory*
+.Rproj*
+.DS_Store
 .Rproj.user
