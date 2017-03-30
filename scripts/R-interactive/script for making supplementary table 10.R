@@ -25,3 +25,7 @@ everyting$smad_effect<-log(everyting$`S-H- (SMAD3 Knockout)`/everyting$`S+H- (Co
 everyting<-everyting[order(everyting$combined_effect , decreasing = T),]
 
 write.xlsx(everyting,row.names = F,col.names = T,file = "140_pathways.xlsx")
+
+everyting$sum <- rowSums(everyting[,2:5])
+shortened<-everyting[everyting$sum>mean(everyting$sum),]
+shortened<-shortened[order(shortened$combined_effect , decreasing = T),]
