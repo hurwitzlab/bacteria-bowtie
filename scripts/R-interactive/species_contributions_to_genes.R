@@ -65,7 +65,7 @@ important <- merge(x=important2[,c(4:9)],y=genome_to_feature,by.x="tracking_id",
 #important2$genome_name <- lapply(important$genome_name, as.character)
 #important[is.na(important)]<-"unknown"
 
-colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+colnames(important)[3:6]<-c("S+H+ (H. hepaticus)","S-H+ (Combined)","S+H- (Control)","S-H- (Smad3-/-)")
 
 #cut out all the unnecessary stuff so they group appropriately
 # important$product_name<-gsub('.*arginine decarboxylase.*','arginine decarboxylase',important$product_name,perl = T)
@@ -74,7 +74,7 @@ colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (
 
 important$genome_name<-as.character(important$genome_name)
 melted<-melt(important[,c(2:7)])
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+order<-c("S+H- (Control)","S-H- (Smad3-/-)","S+H+ (H. hepaticus)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ecnumber","genome","Sample","RNA count")
 
@@ -114,13 +114,13 @@ important$genome_name <- lapply(important$genome_name, as.character)
 #important[is.na(important)]<-"unknown"
 
 
-colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+colnames(important)[3:6]<-c("S+H+ (H. hepaticus)","S-H+ (Combined)","S+H- (Control)","S-H- (Smad3-/-)")
 #important$product_name<-gsub('.*butyrate kinase.*','butyrate kinase',important$product_name,perl = T)
 #important$product_name<-gsub('.*phosphate butyryltransferase.*','phosphate butyryltransferase',important$product_name,perl = T)
 
 important$genome_name<-as.character(important$genome_name)
 melted<-melt(important[,c(2:7)])
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+order<-c("S+H- (Control)","S-H- (Smad3-/-)","S+H+ (H. hepaticus)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ecnumber","genome","Sample","RNA count")
 
@@ -164,13 +164,13 @@ important$genome_name <- lapply(important$genome_name, as.character)
 #important[is.na(important)]<-"unknown"
 
 
-colnames(important)[3:6]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+colnames(important)[3:6]<-c("S+H+ (H. hepaticus)","S-H+ (Combined)","S+H- (Control)","S-H- (Smad3-/-)")
 #important$ecnumber<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] glucosamine n-acyltransferase.*','UdpOH-Glu-N-Acyl',important$ecnumber,perl = T)
 #important$ecnumber<-gsub('.*udp-3-o-\\[3-hydroxymyristoyl\\] n-acetylglucosamine deacetylase.*','UdpOH-N-Acetyl-DeAc',important$ecnumber,perl = T)
 
 important$genome_name<-as.character(important$genome_name)
 melted<-melt(important[,c(2:7)])
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+order<-c("S+H- (Control)","S-H- (Smad3-/-)","S+H+ (H. hepaticus)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ecnumber","genome","Sample","RNA count")
 

@@ -23,11 +23,11 @@ attach(oxphos)
 important<-oxphos[ec_number %in% c("2.7.4.1","1.6.99.3","1.6.5.3"),]
 important2 <- merge(x=important[,c(1:5,9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
 
-colnames(important2)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+colnames(important2)[2:5]<-c("S+H+ (H. hepaticus)","S-H+ (Combined)","S+H- (Control)","S-H- (Smad3-/-)")
 
 important2$genome_name<-as.character(important2$genome_name)
 melted<-melt(important2[,c(2:7)])
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+order<-c("S+H- (Control)","S-H- (Smad3-/-)","S+H+ (H. hepaticus)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ec_number","genome","Sample","RNA count")
 
@@ -66,11 +66,11 @@ attach(nitros)
 important<-nitros[ec_number %in% c("1.4.1.13","1.6.5.3"),]
 important2 <- merge(x=important[,c(1:5,9)],y=genome_to_feature,by.x="tracking_id",by.y="refseq_locus_tag")
 
-colnames(important2)[2:5]<-c("S+H+ (H. hepaticus only)","S-H+ (Combined)","S+H- (Control)","S-H- (SMAD3 Knockout)")
+colnames(important2)[2:5]<-c("S+H+ (H. hepaticus)","S-H+ (Combined)","S+H- (Control)","S-H- (Smad3-/-)")
 
 important2$genome_name<-as.character(important2$genome_name)
 melted<-melt(important2[,c(2:7)])
-order<-c("S+H- (Control)","S-H- (SMAD3 Knockout)","S+H+ (H. hepaticus only)","S-H+ (Combined)")
+order<-c("S+H- (Control)","S-H- (Smad3-/-)","S+H+ (H. hepaticus)","S-H+ (Combined)")
 melted <- melted %>% mutate(variable =  factor(variable, levels = order)) %>% arrange(variable)
 colnames(melted)<-c("ec_number","genome","Sample","count")
 
