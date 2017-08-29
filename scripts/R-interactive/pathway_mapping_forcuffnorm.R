@@ -74,7 +74,7 @@ not_na<-with_pathways[!is.na(with_pathways$pathway),]
 with_pathways<-not_na
 rm(not_na)
 
-write.table(with_pathways,"with_pathways.tab",row.names = F)
+#write.table(with_pathways,"with_pathways.tab",row.names = F)
 
 sum_by_kegg_pathway<-rowsum(with_pathways[,c("S1_FPM","S2_FPM","S3_FPM","S4_FPM")],group = with_pathways$pathway)
 sum_by_kegg_pathway<-sum_by_kegg_pathway[!is.na(sum_by_kegg_pathway$S1_FPM),]
@@ -114,10 +114,10 @@ max(x) #3.1
 
 new_bubble_source <- shortened[,1:5]
 
-setwd("~/bacteria-bowtie/scripts/R-interactive/")
+#setwd("~/bacteria-bowtie/scripts/R-interactive/")
 
-write.table(new_bubble_source,"sum_by_kegg_pathway_ordered.tab", sep = "\t", quote = T,row.names = F)
+#write.table(new_bubble_source,"sum_by_kegg_pathway_ordered.tab", sep = "\t", quote = T,row.names = F)
 
-system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered.tab orderedbyeffect")
+#system("source ~/.bash_profile && ./bubble.sh sum_by_kegg_pathway_ordered.tab orderedbyeffect")
 
-system("cp orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
+#system("cp orderedbyeffect.pdf '/Users/Scott/Google Drive/Hurwitz Lab/manuscripts/'")
