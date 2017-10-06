@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# cat genomes in patric_genomes/complete
+# into one big fasta for bowtie2
+#
+
+#PBS -W group_list=bhurwitz
+#PBS -q standard
+#PBS -l select=1:ncpus=2:mem=3gb
+#PBS -l walltime=4:00:00
+#PBS -l cput=4:00:00
+#PBS -M scottdaniel@email.arizona.edu
+#PBS -m bea
+
+cd $PBS_O_WORKDIR
+
+unset module
+set -u
+export CWD="$PWD"
+CONFIG="./config.sh"
+
+if [ -e $CONFIG ]; then
+    . "$CONFIG"
+else
+    echo MIssing config \"$CONFIG\"
+    exit 12385
+fi
+
+PROG=`basename $0 ".sh"`
+#Just going to put stdout and stderr together into stdout
+STDOUT_DIR="$CWD/out/$PROG"
+
+init_dir "$STDOUT_DIR/$(basename $1)"
+
+cd $REF_DIR
+
+time find $PAT_GENOMES_COMP -iname "*.fna" -print1 | xargs -0 -I file cat file > $FA
+
+echo 'THATS ALL!'
