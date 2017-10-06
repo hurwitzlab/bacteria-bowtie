@@ -7,17 +7,10 @@
 # Edit this file to match your directory structure
 #
 # --------------------------------------------------
-
-#
-# Some constants
-#
-export QSTAT="/usr/local/bin/qstat_local"
-export GUNZIP="/bin/gunzip"
-
 #
 # The main checkout
 #
-export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/bacteria-bowtie"
+export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/bacteria-tcga"
 
 # 
 # Sample names
