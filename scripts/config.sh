@@ -17,6 +17,14 @@ export PRJ_DIR="/rsgrps/bhurwitz/scottdaniel/bacteria-tcga"
 #
 export SAMPLE_NAMES=""
 
+#
+# singularity images
+#
+export SING_IMG="/rsgrps/bhurwitz/scottdaniel/singularity-images"
+# Name of working directory within singularity image that will be mapped to SRA_DIR
+export SING_WD="/work"
+#bt2 mapping directory for singularity container
+export SING_BT2="/bt2"
 
 export REF_DIR="/rsgrps/bhurwitz/hurwitzlab/data/reference"
 
@@ -31,6 +39,7 @@ export PAT_GENOMES_WGS="$PAT_GENOMES"/wgs
 
 #patric bowtie2 indices
 export PATRIC_BT2="$REF_DIR"/patric_bt2
+export BT2_INDEX="$PATRIC_BT2"/complete
 #the complete.fa
 #just using complete right now
 export FA="$PATRIC_BT2"/complete.fa
