@@ -17,9 +17,9 @@ else
 fi
 
 if [[ $# = 0 ]]; then
-    echo "Usage: ./00-bowtie2-build.sh \$FASTA \$BT2"
+    echo "Usage: ./01-bowtie2-build.sh \$FASTA \$BT2_INDEX"
     echo "\$FASTA is your source FASTA to build BT2 indices from"
-    echo "And \$BT2 is the (dir)/(basename) of your BT2 indices"
+    echo "And \$BT2_INDEX is the (dir)/(basename) of your BT2 indices"
     echo "ALSO: did you source config.sh?"
     exit 1
 fi

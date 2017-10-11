@@ -39,10 +39,11 @@ export PAT_GENOMES_WGS="$PAT_GENOMES"/wgs
 
 #patric bowtie2 indices
 export PATRIC_BT2="$REF_DIR"/patric_bt2
-export BT2_INDEX="$PATRIC_BT2"/complete
+export BT2="complete"
+export BT2_INDEX="$PATRIC_BT2"/"$BT2"
 #the complete.fa
 #just using complete right now
-export FA="$PATRIC_BT2"/complete.fa
+export FASTA="$PATRIC_BT2"/complete.fa
 
 
 

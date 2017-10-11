@@ -36,7 +36,7 @@ echo "Started at $(date) on host $(hostname)"
 
 echo "Bowtie2 indexing..."
 
-export WD="$(dirname $BT2)"
+export WD="$(dirname $PATRIC_BT2)"
 export FANAME="$(basename $FASTA)"
 export BT2BASE="$(basename $BT2)"
 
@@ -46,7 +46,7 @@ export bt2build="singularity exec \
 
 cd $WD
 
-$bt2build $THREADS --large-index $SING_WD/$FASTA $SIGN_WD/$BT2BASE
+$bt2build $THREADS --large-index $SING_WD/$FANAME $SING_WD/$BT2BASE
 #
 #if [[ ! -e "$BT2".fa ]]; then
 #    ln $FASTA "$BT2".fa
